@@ -14,6 +14,7 @@
 - [x] 도메인 확정 — `worshipers.life`
 - [ ] 1차 시드 팀 확정 (사용자 목록 제공 대기)
 - [ ] 도메인 구매 + Vercel 연결
+- [ ] 디자인 확정 (`docs/DESIGN_BRIEF.md` 프롬프트로 비주얼·브랜드)
 - [ ] Next.js 16 + React 19 + Tailwind v4 + TypeScript strict 셋업
 - [ ] shadcn/ui (Base UI) + 기본 컴포넌트
 - [ ] `.gitignore`, `.env.example`, `next.config.ts`, `tsconfig.json`

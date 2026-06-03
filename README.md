@@ -26,6 +26,7 @@ Next.js 16 (App Router, SSG) · React 19 · TypeScript strict · Tailwind v4 + s
 3. [`docs/DATA.md`](./docs/DATA.md) — **DATA**. 콘텐츠 데이터 모델·파일 규칙·데이터 추가 절차
 4. [`docs/ROADMAP.md`](./docs/ROADMAP.md) — **TODO**. Phase별 체크리스트·진행 상황
 5. [`docs/SNAPSHOT.md`](./docs/SNAPSHOT.md) — **현재 상태**. 시점 핸드오프 (재개 시 첫 참조)
+6. [`docs/DESIGN_BRIEF.md`](./docs/DESIGN_BRIEF.md) — **DESIGN**. 비주얼·브랜드 방향 + 디자인 단계 프롬프트
 
 ## Local Setup
 

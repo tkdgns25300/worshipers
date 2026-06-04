@@ -5,8 +5,8 @@
 ## 시점
 
 - 작성: 2026-06-04
-- 브랜치: `dev` (작업), `main` (배포 — 아직 커밋 없음)
-- 단계: **Phase 0 — 기획 확정 + 문서 작성 완료. 스캐폴딩 직전.**
+- 브랜치: `dev`(작업)·`main`(배포) 둘 다 푸쉬, `d1eb996`에 동기화
+- 단계: **Phase 0 — 기획·문서 완료, 커밋/푸쉬/머지 완료. 🚧 디자인 진행 중 (claude design).**
 
 ## 지금까지 한 일
 
@@ -15,8 +15,9 @@
   - 수익: **광고(카카오 애드핏 우선·비침습) + 후원**. 제휴/스폰서는 Phase 3 옵션
   - MVP 범위: **집회 일정·장소·등록 중심** (셋리스트 = Phase 2)
   - 성장: **SEO** (schema.org `Event` JSON-LD)
-- 문서 6종 작성: `CLAUDE.md`, `README.md`, `docs/{SPEC,DATA,ROADMAP,SNAPSHOT}.md`
-- 아직 커밋·push 안 함 (사용자 지시 대기)
+- 문서 7종 작성: `CLAUDE.md`, `README.md`, `docs/{SPEC,DATA,ROADMAP,SNAPSHOT,DESIGN_BRIEF}.md`
+- 커밋·push·머지 완료 (dev → main fast-forward, merge 커밋 없음)
+- `docs/DESIGN_BRIEF.md` 기반으로 **claude design에서 디자인 진행 중**
 
 ## 확정된 값 (2026-06-04)
 
@@ -29,7 +30,7 @@
 
 ## 다음 할 일
 
-1. **디자인** — `docs/DESIGN_BRIEF.md`(영문 프롬프트)로 비주얼·브랜드 확정. 브랜드 변수(무드·컬러·테마·범위·로고·폰트)는 조정 가능
+1. **디자인 🚧 진행 중** — `docs/DESIGN_BRIEF.md` 프롬프트로 claude design에서 시안 작업. 확정 시 토큰·컴포넌트 방향 반영
 2. 사용자가 **시드 팀 목록** 제공 → 공식 채널 확인 후 `Team`/`Gathering` 작성 (일정·주소 임의입력 금지, `sourceUrl` 필수)
 3. **Next.js 스캐폴딩** (Phase 0 인프라 체크리스트 — ROADMAP). 데이터와 독립이라 목록 전에 진행 가능
 4. 이후 Phase 1 진행

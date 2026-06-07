@@ -162,3 +162,23 @@ Output tokens from the established look: color (incl. status), type scale, spaci
 - Do NOT rehost real ministries' logos/posters (use placeholders). Do NOT present sample dates as real. No login/account/payment/review UI.
 
 Use clearly-labeled SAMPLE content (e.g., 마커스/제이어스/위러브, illustrative dates).
+
+---
+
+# Revision prompt — round 2 (polish the existing screens)
+
+> Paste after the screens exist. Keep the current visual language; only apply these fixes.
+
+1. **Unify terminology.** Generic word for an item = **"모임"** (team = **"예배팀"**). Change **"지난 집회 보기" → "지난 모임 보기"**. Individual items stay labeled by category (정기예배/기도모임/etc.). Use "집회" only in SEO titles, not in UI chrome.
+2. **Show all filters — not just category chips.** Under the category row add real controls: **팀**(multi), **지역**(시·도 + 온라인), **기간**(이번 주/이번 달/전체), **무료만** toggle. On mobile they collapse into a "필터" sheet.
+3. **One search per page.** On Home keep only the hero search; **remove the duplicate top-right header search** (header search appears only on inner pages).
+4. **Gathering detail — contextual primary CTA:**
+   - registration required & open → primary **"등록하기"** (→ `registration.url`)
+   - registration required & past deadline → **"등록마감"** (disabled)
+   - registration not required → primary action = **"공유"**; source link is secondary
+   Add a **share** action (copy link / share) on every detail page.
+5. **De-duplicate the source link.** Show the official-source ("정보 출처") link **once**, not three times.
+6. **About copy.** Replace **"비영리 서비스"** with wording consistent with funding, e.g., **"독립적으로 운영되는 큐레이션 서비스 (광고·후원으로 운영)"**. Make the top intro and the bottom "광고와 후원으로 운영됩니다" consistent.
+7. *(Cosmetic)* Use domain **worshipers.life** in mockups (confirmed), not `.kr`.
+
+Everything else stays. Keep mobile + desktop, light theme, Korean UI, clearly-labeled sample data.

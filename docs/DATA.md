@@ -17,6 +17,10 @@ export type Region =
   | '세종' | '강원' | '충북' | '충남' | '전북' | '전남' | '경북' | '경남' | '제주'
   | '온라인'
 
+// 집회 유형 (홈 카테고리 칩 — '전체'는 필터 기본값이라 enum에 없음)
+export type GatheringCategory =
+  | '정기예배' | '연합예배' | '거리예배' | '수련회' | '기도모임' | '절기예배'
+
 export interface Team {
   id: string                 // 영어 kebab-case, 파일명·URL과 동일 (예: 'markers')
   name: string               // 한글 표기 (예: '마커스')
@@ -39,6 +43,7 @@ export interface Team {
 export interface Gathering {
   id: string                 // 영어 kebab-case, 전역 유일. {team-id}-{yyyy-mm-dd} 권장 (예: 'markers-2026-06-13')
   teamId: string             // Team.id 참조
+  category: GatheringCategory // 집회 유형 (홈 카테고리 필터)
   title?: string             // 집회 테마/타이틀 (있으면)
   date: string               // ISO date 'YYYY-MM-DD' (KST 기준 날짜)
   startTime?: string         // 'HH:mm'

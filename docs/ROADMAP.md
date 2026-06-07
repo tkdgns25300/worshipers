@@ -26,7 +26,7 @@
 > 각 페이지 동작은 SPEC.md, 타입·파일 규칙은 DATA.md.
 
 ### 1-1. 공통 골격
-- [ ] 도메인 타입 (`types/domain.ts`) — `Team`·`Gathering`·`Region`
+- [ ] 도메인 타입 (`types/domain.ts`) — `Team`·`Gathering`·`Region`·`GatheringCategory`
 - [ ] 상수 (`constants/`) — `REGIONS`, 후원 링크
 - [ ] `lib/gathering-status.ts` — 예정/오늘/등록마감/종료 파생 (단일 정의)
 - [ ] `lib/queries.ts` — 다가오는 집회·팀별 묶기·정렬·필터
@@ -40,7 +40,7 @@
 
 ### 1-3. 홈 — 집회 목록 (`/`)
 - [ ] 다가오는 집회 카드 그리드 (날짜순)
-- [ ] 필터바 (팀·지역·기간·무료) — URL params 유지
+- [ ] 필터바 (카테고리·팀·지역·기간·무료) + 검색(클라이언트) — URL params 유지
 - [ ] 상태 배지 + 빈 상태 + "지난 집회 보기" 토글
 - [ ] 상태/다가오는 분기는 클라이언트 KST 계산 (ISR 미사용)
 

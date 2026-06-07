@@ -17,7 +17,8 @@
   - 성장: **SEO** (schema.org `Event` JSON-LD)
 - 문서 7종 작성: `CLAUDE.md`, `README.md`, `docs/{SPEC,DATA,ROADMAP,SNAPSHOT,DESIGN_BRIEF}.md`
 - 커밋·push·머지 완료 (dev → main fast-forward, merge 커밋 없음)
-- `docs/DESIGN_BRIEF.md` 기반으로 **claude design에서 디자인 진행 중**
+- `docs/DESIGN_BRIEF.md` 기반으로 **claude design에서 디자인 진행 중** — 홈 화면 1차 시안 확보
+- MVP 범위 확정: **로그인·알림·저장됨 제외**, **카테고리(집회 유형) 도입**, 검색은 클라이언트, 기간·지난집회 필수
 
 ## 확정된 값 (2026-06-04)
 
@@ -40,3 +41,6 @@
 - 시드 팀 목록 (사용자 제공 대기)
 - 토스 송금 링크/QR 실제 값
 - 카카오 애드핏 ad unit id (가입 후)
+- 도메인 표기: 목업 `worshipers.kr` vs 확정 `worshipers.life` — 최종 확인
+- UI 용어(예배팀/모임 vs 찬양팀/집회) 확정
+- 카테고리 6종 확정 + 저장됨(찜) 포함 여부

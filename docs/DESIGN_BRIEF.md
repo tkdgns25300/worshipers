@@ -110,3 +110,55 @@ Use clearly-fictional placeholder data. Example set (mark visibly as 예시/샘�
 - Do **not** present sample dates/venues as real.
 - Do **not** let ads cover or sit above core gathering info.
 - Do **not** add login, account, payment, or review UI — none exists in this product.
+
+---
+
+# Continuation prompt — remaining screens (paste into the existing claude design session)
+
+> Use this after the Home screen is designed, to extend the SAME design language to the rest of the MVP.
+
+**Context:** You already designed the **Home** screen for "Worshipers": an indigo "worshipers" wordmark, an indigo hero ("이번 주, 함께 드릴 예배를 찾다"), a category chip row (전체/정기예배/연합예배/거리예배/수련회/기도모임/절기예배), date-bucketed sections ("오늘 N"), and gathering cards (date chip, status badges "오늘 진행"/"온라인", title, team avatar+name, time, venue, 무료/유료, chevron). **Keep that exact visual language** — colors, type, spacing, card style, badges.
+
+Now extend it to complete an MVP. Mobile + desktop, light theme with dark-ready tokens, Korean UI.
+
+## MVP corrections to apply to the Home
+- **Remove the top-right profile/login avatar and the notification bell.** No login, no accounts, no notifications (read-only curation).
+- **Remove the "저장됨" nav item.** Header = wordmark · `둘러보기` · search only.
+- Keep search, but it is **client-side filtering** (no backend).
+- Show each gathering's **category** as a small tag on the card.
+
+## Screens to design
+1. **Gathering detail** (`/gatherings/[id]`)
+   - Header: title · team · status badge (예정/오늘/등록마감/종료) · 온라인 badge if online.
+   - **Core info block** (visual priority, never covered): 일시(date+time) · 장소(name+address + outbound "지도" link) · 입장(무료/유료 + price) · 사전등록(필요여부 + prominent outbound **"등록하기"** button + 마감일) · 게스트 · 온라인 송출 link.
+   - "정보 출처" outbound link (official announcement).
+   - Host **team card** → team detail.
+2. **Team detail** (`/teams/[id]`)
+   - Header: 예배팀 name + avatar · one-line intro · 정기 일정 · region tags.
+   - Links row (outbound, present-only): YouTube · Instagram · 홈페이지 · Kakao.
+   - 대표곡 (text chips).
+   - "다가오는 모임" list — reuse the gathering card.
+3. **About** (`/about`) — service purpose · 문의(mailto `tkdgns25300@naver.com`) · **후원하기**(Toss) button · "정보 정정·삭제 요청" link.
+4. **Privacy** (`/privacy`) — plain, legible policy page (광고·GA 쿠키 고지).
+
+## Shared / states
+- **Footer** (all pages): 후원하기(Toss) · 문의 · 개인정보처리방침 · 정보 정정·삭제 요청.
+- **Empty state** for Home when filters return nothing.
+- **"지난 집회 보기" toggle** (past gatherings dimmed).
+- **Mobile** versions of Home + both detail screens (filters collapse to a sheet; cards stack).
+- **Status badges** set: 예정 / 오늘(emphasis) / 등록마감 / 종료(dimmed) — distinguishable by label+icon, not color alone.
+
+## Design system to extract & document
+Output tokens from the established look: color (incl. status), type scale, spacing, radius, shadow (Tailwind theme + CSS vars, light+dark); and the component set (header, footer, filter bar + chips, search, gathering card, status badge, category tag, team card, ad-slot placeholder labeled "광고", donation button, empty state).
+
+## Data shapes (bind realistic content)
+- **Team**{ name, nameEn?, description, denomination?, homeBase?, regularSchedule?, regions?[], links{youtube?,instagram?,homepage?,kakao?}, imageUrl?, signatureSongs?[] }
+- **Gathering**{ teamId, category(정기예배|연합예배|거리예배|수련회|기도모임|절기예배), title?, date, startTime?, endTime?, venue{name,address?,region,mapUrl?}, isFree, price?(KRW number), registration{required,url?,deadline?}, guests?[], isOnline?, liveUrl?, sourceUrl, note? }
+- region = 시·도 + 온라인.
+
+## Constraints (unchanged)
+- Mobile-first · Korean copy · WCAG AA contrast · ≥44px targets · visible focus.
+- Ads: a single non-intrusive slot only (in-feed/bottom on Home; below the core block on detail). Ads are **deferred** — build the slot, no live ads. Donation (footer) is the day-1 revenue channel.
+- Do NOT rehost real ministries' logos/posters (use placeholders). Do NOT present sample dates as real. No login/account/payment/review UI.
+
+Use clearly-labeled SAMPLE content (e.g., 마커스/제이어스/위러브, illustrative dates).

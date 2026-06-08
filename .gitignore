@@ -1,0 +1,16 @@
+# dependencies / build (future scaffold)
+node_modules/
+.next/
+out/
+build/
+
+# env
+.env*
+!.env.example
+
+# design — heavy standalone export (keep tokens.css only)
+design/**/*standalone*.html
+
+# os / editor
+.DS_Store
+*.log

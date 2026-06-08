@@ -16,6 +16,8 @@
 | Logo | Propose a "Worshipers" wordmark concept | Skip if one already exists |
 | Font | Pretendard (Korean) | |
 
+> **승인 시안 토큰**: [`../design/tokens.css`](../design/tokens.css) → 스캐폴딩 시 `globals.css @theme`로 이식 (팔레트 3종, `sanctuary` 기본).
+
 ---
 
 # Design Brief — "Worshipers": Korean Christian Worship-Gathering Directory

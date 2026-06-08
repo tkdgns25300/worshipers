@@ -25,6 +25,7 @@ export interface Team {
   id: string                 // 영어 kebab-case, 파일명·URL과 동일 (예: 'markers')
   name: string               // 한글 표기 (예: '마커스')
   nameEn?: string            // 영문 (예: 'Markers')
+  short?: string             // 아바타 이니셜 1~2자 (예: '마'). 없으면 name에서 파생
   description: string        // 한두 문단 소개
   denomination?: string      // 교단/신학 색깔·배경 (있으면)
   homeBase?: string          // 소속 교회/단체 또는 주 활동지

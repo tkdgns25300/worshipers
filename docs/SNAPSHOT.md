@@ -2,17 +2,17 @@
 
 > 재개 시 **첫 참조**. "지금 어디까지 됐고, 다음에 뭘 하는가"만. 상세는 SPEC/DATA, 전체 작업은 ROADMAP.
 
-## 시점 (2026-06-08)
+## 시점 (2026-06-09)
 
-- **단계**: Phase 0 — 기획·문서·**디자인 확정**(round-2 반영 export 확인). 디자인 소스 정리 완료 → **스캐폴딩 직전**.
+- **단계**: Phase 0 완료 — **Next 스캐폴딩 빌드·린트 통과**. → Phase 1 골격(step 2) 직전.
 - **브랜치**: `dev`(작업)·`main`(배포) 최신 커밋에 동기화. default `main`, merge 커밋 없음(fast-forward).
-- **코드**: 아직 없음. 디자인 토큰은 `design/tokens.css` (스캐폴딩 시 `globals.css @theme`로 이식).
+- **코드**: Next 16 + React 19 + Tailwind v4 스캐폴딩 — `src/app/{layout,page,globals.css}`·`src/lib/utils.ts`. 토큰은 `globals.css @theme`로 이식(`design/tokens.css`=참조 원본). 빌드 정적 prerender(SSG) 확인.
 
-## 다음 할 일 (재개 순서)
+## 다음 할 일 (재개 순서 — 구조 먼저)
 
-1. **시드 팀 목록** 확보 → 공식 채널 확인 후 `Team`/`Gathering` 작성 (일정·주소 임의입력 금지, `sourceUrl` 필수).
-2. **Next.js 스캐폴딩** (ROADMAP Phase 0) — Next 16 + React 19 + Tailwind v4 + shadcn. `design/tokens.css` → `globals.css @theme`, 컴포넌트는 인라인 유틸로.
-3. 이후 **Phase 1 (MVP)** — ROADMAP 체크리스트.
+1. **step 2 · 기반** — `types/domain.ts`(Team·Gathering·Region·GatheringCategory) + `lib/gathering-status.ts`(KST 파생) + `lib/queries.ts` + `constants/`(REGIONS·카테고리).
+2. **step 3 · 레이아웃·페이지** — 루트 레이아웃(헤더/푸터/네비) + 5 라우트(`/`·`/gatherings/[id]`·`/teams/[id]`·`/about`·`/privacy`) 골격 + 카드·배지·필터 컴포넌트 + sitemap/robots. (데이터는 임시 샘플)
+3. **step 4 · 데이터** — 샘플 → **실제 시드 팀**(목록 받으면). 이후 Vercel 연결·배포.
 
 ## 확정된 값
 

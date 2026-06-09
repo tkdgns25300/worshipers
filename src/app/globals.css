@@ -1,0 +1,190 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* ============================================================
+ * Design tokens — ported from design/tokens.css (단일 소스)
+ * Light default · dark-ready · 3 palettes (sanctuary 기본)
+ * ============================================================ */
+:root {
+  --font: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont,
+          "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+
+  --t-display: 2.5rem; --t-h1: 1.75rem; --t-h2: 1.375rem; --t-h3: 1.125rem;
+  --t-body: 0.9375rem; --t-sm: 0.875rem; --t-cap: 0.75rem;
+  --fw-r: 400; --fw-m: 500; --fw-sb: 600; --fw-b: 700;
+  --lh-tight: 1.15; --lh-snug: 1.3; --lh-normal: 1.55;
+
+  --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 20px; --s6: 24px;
+  --s8: 32px; --s10: 40px; --s12: 48px; --s16: 64px;
+
+  --r-sm: 6px; --r-md: 10px; --r-lg: 14px; --r-xl: 20px; --r-2xl: 28px; --r-full: 999px;
+
+  --sh-xs: 0 1px 2px rgba(20,18,40,.05);
+  --sh-sm: 0 1px 3px rgba(20,18,40,.07), 0 1px 2px rgba(20,18,40,.04);
+  --sh-md: 0 6px 16px -4px rgba(20,18,40,.10), 0 2px 6px -2px rgba(20,18,40,.06);
+  --sh-lg: 0 18px 40px -12px rgba(20,18,40,.18), 0 6px 14px -8px rgba(20,18,40,.10);
+  --ease: cubic-bezier(.22,.61,.36,1);
+}
+
+/* Palette A — Sanctuary (default): indigo + amber */
+[data-palette="sanctuary"] {
+  --brand-50:#eef0ff; --brand-100:#e0e2ff; --brand-200:#c6c9fb;
+  --brand-400:#7c79ee; --brand-500:#5b54e6; --brand-600:#4b40d4;
+  --brand-700:#3d33ad; --brand-ink:#221a52;
+  --accent-50:#fff5e6; --accent-200:#fcdfa6; --accent-500:#f1a417;
+  --accent-600:#d9870a; --accent-700:#a9670a;
+}
+[data-palette="sanctuary"][data-theme="light"] {
+  --bg:#fbfaff; --surface:#ffffff; --surface-2:#f4f3fb;
+  --ink:#181527; --ink-soft:#4a4660; --ink-mute:#7c7894;
+  --border:#e7e5f2; --border-soft:#f0eef8; --on-brand:#ffffff;
+}
+
+/* Palette B — Still Waters: navy + gold */
+[data-palette="stillwaters"] {
+  --brand-50:#eef3fa; --brand-100:#dde8f5; --brand-200:#b9cde8;
+  --brand-400:#5c7fad; --brand-500:#36588a; --brand-600:#284a73;
+  --brand-700:#1d3a5e; --brand-ink:#15263d;
+  --accent-50:#fbf3e6; --accent-200:#ecd6a8; --accent-500:#c79236;
+  --accent-600:#a8772a; --accent-700:#845c1f;
+}
+[data-palette="stillwaters"][data-theme="light"] {
+  --bg:#f6f8fc; --surface:#ffffff; --surface-2:#eef2f8;
+  --ink:#14223a; --ink-soft:#3f5170; --ink-mute:#748098;
+  --border:#e0e7f0; --border-soft:#eef2f8; --on-brand:#ffffff;
+}
+
+/* Palette C — Sunrise: magenta + coral */
+[data-palette="sunrise"] {
+  --brand-50:#fbeef6; --brand-100:#f7dcee; --brand-200:#efb9dc;
+  --brand-400:#c95bb0; --brand-500:#b23a96; --brand-600:#9b2a82;
+  --brand-700:#7a2167; --brand-ink:#4f1644;
+  --accent-50:#fff1e6; --accent-200:#ffd0a3; --accent-500:#fb8a3c;
+  --accent-600:#ef6f1a; --accent-700:#c4540f;
+}
+[data-palette="sunrise"][data-theme="light"] {
+  --bg:#fffaf5; --surface:#ffffff; --surface-2:#fdf2ea;
+  --ink:#2b1226; --ink-soft:#5c4054; --ink-mute:#8d7385;
+  --border:#f1e2e9; --border-soft:#f8edf2; --on-brand:#ffffff;
+}
+
+/* Dark theme — shared remaps + per-palette brand lift */
+[data-theme="dark"] {
+  --ink:#f3f1fb; --ink-soft:#b8b3cc; --ink-mute:#837e98; --on-brand:#ffffff;
+  --sh-xs:0 1px 2px rgba(0,0,0,.4);
+  --sh-sm:0 1px 3px rgba(0,0,0,.5);
+  --sh-md:0 6px 16px -4px rgba(0,0,0,.55);
+  --sh-lg:0 18px 40px -12px rgba(0,0,0,.6);
+}
+[data-palette="sanctuary"][data-theme="dark"] {
+  --bg:#110f1c; --surface:#1a1730; --surface-2:#221e3c;
+  --border:#2e2950; --border-soft:#262143;
+  --brand-600:#7d76f0; --brand-700:#6760e0; --brand-50:#221e3c; --brand-100:#2a2548; --brand-200:#3a3470;
+}
+[data-palette="stillwaters"][data-theme="dark"] {
+  --bg:#0e1622; --surface:#15202f; --surface-2:#1c293b;
+  --border:#27374d; --border-soft:#1f2c3f;
+  --brand-600:#5e84b8; --brand-700:#4e72a3; --brand-50:#1c293b; --brand-100:#233347; --brand-200:#324863;
+}
+[data-palette="sunrise"][data-theme="dark"] {
+  --bg:#1a0f17; --surface:#241621; --surface-2:#2e1c29;
+  --border:#3d2737; --border-soft:#33212f;
+  --brand-600:#d660b3; --brand-700:#c14f9e; --brand-50:#2e1c29; --brand-100:#381f31; --brand-200:#4d2c43;
+}
+
+/* Status tokens (색 + 아이콘·라벨 병행, color-only 금지) */
+[data-theme="light"] {
+  --st-upcoming-bg:var(--brand-50); --st-upcoming-fg:var(--brand-700); --st-upcoming-br:var(--brand-200);
+  --st-today-bg:var(--accent-500); --st-today-fg:#2a1c00; --st-today-br:var(--accent-600);
+  --st-closed-bg:#f1f0f4; --st-closed-fg:#6a6678; --st-closed-br:#e2e0ea;
+  --st-ended-bg:#f4f4f6; --st-ended-fg:#9a96a6; --st-ended-br:#ececf0;
+  --free-fg:#1f7a52; --free-bg:#e6f6ee; --free-br:#c4ead4;
+  --paid-fg:var(--ink-soft); --paid-bg:var(--surface-2); --paid-br:var(--border);
+}
+[data-theme="dark"] {
+  --st-upcoming-bg:rgba(125,118,240,.16); --st-upcoming-fg:var(--brand-600); --st-upcoming-br:rgba(125,118,240,.32);
+  --st-today-bg:var(--accent-500); --st-today-fg:#2a1c00; --st-today-br:var(--accent-600);
+  --st-closed-bg:#2a2735; --st-closed-fg:#a6a1b8; --st-closed-br:#3a3648;
+  --st-ended-bg:#221f2b; --st-ended-fg:#736f84; --st-ended-br:#302c3a;
+  --free-fg:#54c596; --free-bg:rgba(40,140,95,.16); --free-br:rgba(40,140,95,.3);
+  --paid-fg:var(--ink-soft); --paid-bg:var(--surface-2); --paid-br:var(--border);
+}
+
+/* shadcn 시맨틱 토큰 → 우리 팔레트에 매핑 (Base UI 컴포넌트가 인브랜드로 렌더) */
+:root {
+  --radius: var(--r-lg);
+  --background: var(--bg); --foreground: var(--ink);
+  --card: var(--surface); --card-foreground: var(--ink);
+  --popover: var(--surface); --popover-foreground: var(--ink);
+  --primary: var(--brand-600); --primary-foreground: var(--on-brand);
+  --secondary: var(--surface-2); --secondary-foreground: var(--ink);
+  --muted: var(--surface-2); --muted-foreground: var(--ink-mute);
+  --accent: var(--surface-2); --accent-foreground: var(--ink);
+  --destructive: #e5484d; --destructive-foreground: #ffffff;
+  --input: var(--border); --ring: var(--brand-500);
+}
+
+/* ============================================================
+ * Tailwind theme mapping (utilities → tokens)
+ * ============================================================ */
+@theme inline {
+  --font-sans: var(--font);
+
+  --color-brand-50: var(--brand-50);
+  --color-brand-100: var(--brand-100);
+  --color-brand-200: var(--brand-200);
+  --color-brand-400: var(--brand-400);
+  --color-brand-500: var(--brand-500);
+  --color-brand-600: var(--brand-600);
+  --color-brand-700: var(--brand-700);
+  --color-brand-ink: var(--brand-ink);
+  --color-accent-50: var(--accent-50);
+  --color-accent-200: var(--accent-200);
+  --color-accent-500: var(--accent-500);
+  --color-accent-600: var(--accent-600);
+  --color-accent-700: var(--accent-700);
+
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-mute: var(--ink-mute);
+  --color-border: var(--border);
+  --color-border-soft: var(--border-soft);
+  --color-on-brand: var(--on-brand);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --radius-sm: var(--r-sm);
+  --radius-md: var(--r-md);
+  --radius-lg: var(--r-lg);
+  --radius-xl: var(--r-xl);
+  --radius-2xl: var(--r-2xl);
+}
+
+@layer base {
+  body {
+    background-color: var(--bg);
+    color: var(--ink);
+    font-family: var(--font);
+    -webkit-font-smoothing: antialiased;
+  }
+}

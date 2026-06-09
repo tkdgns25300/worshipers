@@ -14,11 +14,12 @@
 - [x] 도메인 확정 — `worshipers.life`
 - [ ] 1차 시드 팀 확정 (사용자 목록 제공 대기)
 - [ ] 도메인 구매 + Vercel 연결
-- [ ] 디자인 확정 — 🚧 claude design 진행 중 (`docs/DESIGN_BRIEF.md` 기반)
-- [ ] Next.js 16 + React 19 + Tailwind v4 + TypeScript strict 셋업
-- [ ] shadcn/ui (Base UI) + 기본 컴포넌트
-- [ ] `.gitignore`, `.env.example`, `next.config.ts`, `tsconfig.json`
-- [ ] GitHub repo 생성 (default `main`) + 첫 push
+- [x] 디자인 확정 — claude design (round-2 반영), 토큰 `design/tokens.css`
+- [x] Next.js 16 + React 19 + Tailwind v4 + TypeScript strict 셋업 (빌드·린트 통과, plain SSG)
+- [x] shadcn 설정 (`components.json`·`lib/utils` cn) — 기본 컴포넌트는 step 3에서
+- [x] 토큰 이식 — `design/tokens.css` → `globals.css @theme` (팔레트 3종×라이트/다크)
+- [x] `.gitignore`·`.env.example`·`next.config.ts`·`tsconfig.json`·postcss·eslint
+- [x] GitHub repo + push (default `main`)
 - [ ] Vercel 연결 + 첫 배포 (production = `main`)
 
 ## Phase 1: MVP — 일정·장소·등록 중심

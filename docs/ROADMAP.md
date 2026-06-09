@@ -32,8 +32,9 @@
 - [x] `lib/gathering-status.ts` — `todayKst`·`daysUntil`·상태 파생 (KST 단일 정의)
 - [x] `lib/queries.ts` — 정렬·날짜 버킷 그룹·팀 join (속성 필터는 step 3 client)
 - [x] 샘플 데이터 레이어 (`data/**` 3팀 + 집회 7) — 실제 시드는 1-2
-- [ ] `lib/seo.ts` — JSON-LD·메타 헬퍼 (step 3)
-- [ ] 레이아웃 (헤더·푸터·네비) + 5 라우트 (step 3) — `globals.css`·`<html lang="ko">`는 완료
+- [x] 레이아웃 셸 (헤더·푸터·모바일탭) + 공통 컴포넌트(워드마크·상태배지·카테고리태그·집회카드·광고슬롯·후원버튼) — 3a
+- [ ] `lib/seo.ts` — JSON-LD·메타 헬퍼 (step 3c)
+- [ ] 홈/상세/팀/about/privacy 페이지 (step 3b~3d) + sitemap/robots
 
 ### 1-2. 데이터 (시드)
 - [ ] 확정 팀들의 `Team` 파일 작성 (소개·링크)

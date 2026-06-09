@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { SiteHeader } from "@/components/layout/site-header";
+import { SiteFooter } from "@/components/layout/site-footer";
+import { MobileNav } from "@/components/layout/mobile-nav";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://worshipers.life";
 
@@ -17,7 +20,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko" data-palette="sanctuary" data-theme="light">
-      <body>{children}</body>
+      <body className="flex min-h-dvh flex-col">
+        <SiteHeader />
+        <main className="flex-1">{children}</main>
+        <SiteFooter />
+        <div className="h-16 md:hidden" aria-hidden />
+        <MobileNav />
+      </body>
     </html>
   );
 }

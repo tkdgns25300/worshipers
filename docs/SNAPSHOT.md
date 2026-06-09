@@ -4,14 +4,16 @@
 
 ## 시점 (2026-06-09)
 
-- **단계**: Phase 1 진행 — **step 2(기반+데이터 레이어) 완료**, tsc·lint·build 통과. → step 3(레이아웃·페이지·컴포넌트).
+- **단계**: Phase 1 진행 — **step 3a(셸+공통 컴포넌트) 완료**, tsc·lint·build 통과. → step 3b(홈).
 - **브랜치**: `dev`(작업)·`main`(배포) 최신 커밋에 동기화. default `main`, merge 커밋 없음(fast-forward).
-- **코드**: 스캐폴딩 + 기반 완료 — `types/domain` · `constants/{regions,categories,site}` · `lib/{gathering-status(KST),queries}` · `data/**`(샘플 3팀+집회7). UI는 아직 placeholder 홈.
+- **코드**: 스캐폴딩·기반·셸 완료 — `types`·`constants`·`lib/{gathering-status,queries}`·`data/**`(샘플) + `components/{layout,gathering,ads}` + 레이아웃 셸(헤더/푸터/모바일탭). 홈은 아직 placeholder.
 
 ## 다음 할 일 (재개 순서 — 구조 먼저)
 
-1. **step 3 · 레이아웃·페이지** — 루트 레이아웃(헤더/푸터/네비) + 5 라우트(`/`·`/gatherings/[id]`·`/teams/[id]`·`/about`·`/privacy`) 골격 + 카드·배지·필터 컴포넌트 + sitemap/robots. (데이터는 샘플, 필터는 client)
-2. **step 4 · 데이터** — 샘플 → **실제 시드 팀**(목록 받으면). 이후 Vercel 연결·배포.
+1. **step 3b · 홈** — 히어로 + 카테고리/필터(팀·지역·기간·무료, client KST) + 날짜 버킷 + 지난 모임 토글 + 광고 슬롯 + 빈 상태.
+2. **step 3c · 상세 2종 + SEO** — `gatherings/[id]`·`teams/[id]` (`generateStaticParams`·`generateMetadata`·Event JSON-LD) + `lib/seo.ts` + sitemap/robots.
+3. **step 3d · about/privacy** (+ 팀 디렉토리 fast-follow).
+4. **step 4 · 데이터** — 샘플 → **실제 시드 팀**(목록 받으면). 이후 Vercel 연결·배포.
 
 ## 확정된 값
 

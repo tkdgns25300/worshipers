@@ -4,15 +4,14 @@
 
 ## 시점 (2026-06-09)
 
-- **단계**: Phase 0 완료 — **Next 스캐폴딩 빌드·린트 통과**. → Phase 1 골격(step 2) 직전.
+- **단계**: Phase 1 진행 — **step 2(기반+데이터 레이어) 완료**, tsc·lint·build 통과. → step 3(레이아웃·페이지·컴포넌트).
 - **브랜치**: `dev`(작업)·`main`(배포) 최신 커밋에 동기화. default `main`, merge 커밋 없음(fast-forward).
-- **코드**: Next 16 + React 19 + Tailwind v4 스캐폴딩 — `src/app/{layout,page,globals.css}`·`src/lib/utils.ts`. 토큰은 `globals.css @theme`로 이식(`design/tokens.css`=참조 원본). 빌드 정적 prerender(SSG) 확인.
+- **코드**: 스캐폴딩 + 기반 완료 — `types/domain` · `constants/{regions,categories,site}` · `lib/{gathering-status(KST),queries}` · `data/**`(샘플 3팀+집회7). UI는 아직 placeholder 홈.
 
 ## 다음 할 일 (재개 순서 — 구조 먼저)
 
-1. **step 2 · 기반** — `types/domain.ts`(Team·Gathering·Region·GatheringCategory) + `lib/gathering-status.ts`(KST 파생) + `lib/queries.ts` + `constants/`(REGIONS·카테고리).
-2. **step 3 · 레이아웃·페이지** — 루트 레이아웃(헤더/푸터/네비) + 5 라우트(`/`·`/gatherings/[id]`·`/teams/[id]`·`/about`·`/privacy`) 골격 + 카드·배지·필터 컴포넌트 + sitemap/robots. (데이터는 임시 샘플)
-3. **step 4 · 데이터** — 샘플 → **실제 시드 팀**(목록 받으면). 이후 Vercel 연결·배포.
+1. **step 3 · 레이아웃·페이지** — 루트 레이아웃(헤더/푸터/네비) + 5 라우트(`/`·`/gatherings/[id]`·`/teams/[id]`·`/about`·`/privacy`) 골격 + 카드·배지·필터 컴포넌트 + sitemap/robots. (데이터는 샘플, 필터는 client)
+2. **step 4 · 데이터** — 샘플 → **실제 시드 팀**(목록 받으면). 이후 Vercel 연결·배포.
 
 ## 확정된 값
 

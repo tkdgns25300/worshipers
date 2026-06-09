@@ -27,12 +27,13 @@
 > 각 페이지 동작은 SPEC.md, 타입·파일 규칙은 DATA.md.
 
 ### 1-1. 공통 골격
-- [ ] 도메인 타입 (`types/domain.ts`) — `Team`·`Gathering`·`Region`·`GatheringCategory`
-- [ ] 상수 (`constants/`) — `REGIONS`, 후원 링크
-- [ ] `lib/gathering-status.ts` — 예정/오늘/등록마감/종료 파생 (단일 정의)
-- [ ] `lib/queries.ts` — 다가오는 집회·팀별 묶기·정렬·필터
-- [ ] `lib/seo.ts` — JSON-LD·메타 헬퍼
-- [ ] 레이아웃 (헤더·푸터·네비) + `globals.css` + `<html lang="ko">`
+- [x] 도메인 타입 (`types/domain.ts`) — `Team`·`Gathering`·`Region`·`GatheringCategory`·`GatheringStatus`
+- [x] 상수 (`constants/`) — `REGIONS`·카테고리·`SITE`(문의·후원)
+- [x] `lib/gathering-status.ts` — `todayKst`·`daysUntil`·상태 파생 (KST 단일 정의)
+- [x] `lib/queries.ts` — 정렬·날짜 버킷 그룹·팀 join (속성 필터는 step 3 client)
+- [x] 샘플 데이터 레이어 (`data/**` 3팀 + 집회 7) — 실제 시드는 1-2
+- [ ] `lib/seo.ts` — JSON-LD·메타 헬퍼 (step 3)
+- [ ] 레이아웃 (헤더·푸터·네비) + 5 라우트 (step 3) — `globals.css`·`<html lang="ko">`는 완료
 
 ### 1-2. 데이터 (시드)
 - [ ] 확정 팀들의 `Team` 파일 작성 (소개·링크)

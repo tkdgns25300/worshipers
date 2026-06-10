@@ -30,17 +30,9 @@ export function getTeamGatherings(teamId: string): Gathering[] {
   return GATHERINGS.filter((g) => g.teamId === teamId).sort(byDateAsc);
 }
 
-export function getUpcoming(today: string): Gathering[] {
-  return GATHERINGS.filter((g) => g.date >= today).sort(byDateAsc);
-}
-
-export function getPast(today: string): Gathering[] {
-  return GATHERINGS.filter((g) => g.date < today).sort((a, b) => b.date.localeCompare(a.date));
-}
-
-/** 다가오는 집회를 날짜 버킷으로 그룹: 오늘 / 이번 주(≤7일) / 다가오는 모임(>7일). */
-export function groupUpcoming(today: string): GatheringBucket[] {
-  const upcoming = getUpcoming(today);
+/** 주어진 목록을 날짜 버킷으로 그룹: 오늘 / 이번 주(≤7일) / 다가오는 모임(>7일). 과거는 제외된다. */
+export function groupUpcoming(gatherings: Gathering[], today: string): GatheringBucket[] {
+  const upcoming = gatherings.filter((g) => g.date >= today).sort(byDateAsc);
   return [
     { key: "today", label: "오늘", items: upcoming.filter((g) => daysUntil(g.date, today) === 0) },
     { key: "week", label: "이번 주", items: upcoming.filter((g) => { const n = daysUntil(g.date, today); return n > 0 && n <= 7; }) },

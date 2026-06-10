@@ -2,7 +2,7 @@ import { Flame, Users, Sunrise, Tent, Sparkles, Star, type LucideIcon } from "lu
 import type { GatheringCategory } from "@/types/domain";
 import { cn } from "@/lib/utils";
 
-const ICON: Record<GatheringCategory, LucideIcon> = {
+export const CATEGORY_ICON: Record<GatheringCategory, LucideIcon> = {
   정기예배: Flame,
   연합예배: Users,
   거리예배: Sunrise,
@@ -12,7 +12,7 @@ const ICON: Record<GatheringCategory, LucideIcon> = {
 };
 
 export function CategoryTag({ category, className }: { category: GatheringCategory; className?: string }) {
-  const Icon = ICON[category];
+  const Icon = CATEGORY_ICON[category];
   return (
     <span
       className={cn(

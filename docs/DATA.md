@@ -105,6 +105,39 @@ public/images/teams/{team-id}.png   팀 로고/대표 이미지
 2. `npm run build`로 타입·생성 확인
 3. `dev`에 커밋 → (지시 시) `main` 머지 → Vercel 자동 배포
 
+## 입력 템플릿
+
+> 스키마(필드·타입)의 단일 진실은 `src/types/domain.ts`, 채워진 예시는 `src/data/teams|gatherings/*.ts`. 아래는 **자료를 주고받을 때의 양식** — 느슨하게 줘도 되고(또는 URL·텍스트·이미지), 결과는 항상 타입에 맞는 TS 파일이 된다.
+
+### 복붙용 입력 양식
+
+```
+[팀] 마커스 / Markers
+소개: (한 줄)
+링크: youtube= / instagram= / homepage= / kakao=
+지역: 서울    대표곡: a, b, c    이니셜(선택): 마
+
+[집회] 마커스 목요예배 6월
+팀: 마커스 · 종류: 정기예배 · 날짜: 2026-06-19 · 시간: 19:30-21:30
+장소: 맑은샘광천교회 / 서울 성북구 ○○로 / 서울
+입장: 무료            등록: 불필요
+온라인: (송출 링크)   게스트: …   비고: …
+출처: https://…   ← 필수
+```
+
+- **종류(category)**: `정기예배 · 연합예배 · 거리예배 · 수련회 · 기도모임 · 절기예배`
+- **지역(region)**: 시·도(서울·경기·부산 …) 또는 `온라인`
+- **입장**: `무료` 또는 금액(원, 숫자) · **등록**: `불필요` 또는 `필요 + 링크 + 마감(YYYY-MM-DD)`
+
+### 필수 / 선택
+
+| | 필수 | 선택 |
+|---|---|---|
+| **Team** | `id`·`name`·`description`·`links`(≥1) | `nameEn`·`short`·`denomination`·`homeBase`·`regularSchedule`·`regions`·`signatureSongs`·`imageUrl` |
+| **Gathering** | `id`·`teamId`·`category`·`date`·`venue`(name·region)·`isFree`·`registration`·**`sourceUrl`** | `title`·`startTime`·`endTime`·`venue.address`·`venue.mapUrl`·`price`·`guests`·`isOnline`·`liveUrl`·`note` |
+
+> 모르는 선택 필드는 비운다(임의 입력 금지). `id`는 입력자가 안 줘도 규칙(`{team-id}`, `{team-id}-{yyyy-mm-dd}`)대로 자동 부여.
+
 ## 데이터 운영 전략 (유지 부담 줄이기)
 
 "집회 때마다 맨손으로"가 아니라, 단계적으로 발견·입력·검토를 분담한다. 데이터가 파일이라 아래 전환이 자연스럽다.

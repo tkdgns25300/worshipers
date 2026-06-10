@@ -4,14 +4,15 @@
 
 ## 시점 (2026-06-09)
 
-- **단계**: Phase 1 진행 — **step 3c(상세 2종 + SEO) 완료**, tsc·lint·build 통과(15 정적 페이지). → step 3d(about/privacy + 팀 디렉토리).
+- **단계**: **Phase 1 화면 전부 완성** (홈·집회상세·팀상세·about·privacy + SEO), tsc·lint·build 통과(17 정적 페이지). 남은 건 step 4(실데이터)·배포.
 - **브랜치**: `dev`(작업)·`main`(배포) 최신 커밋에 동기화. default `main`, merge 커밋 없음(fast-forward).
-- **코드**: 홈 + **집회 상세·팀 상세·SEO** 완료 — `gatherings/[id]`·`teams/[id]`(SSG 전수 prerender + JSON-LD), `sitemap`/`robots`, 상태별 CTA·공유. about/privacy·팀 디렉토리 미구현(샘플 데이터로 동작).
+- **코드**: 전 화면 구현 완료(샘플 데이터로 동선·필터·검색·공유 동작). 팀 디렉토리(`/teams` 인덱스)만 보류(fast-follow, 디자인에 없음).
 
 ## 다음 할 일 (재개 순서 — 구조 먼저)
 
-1. **step 3d · about/privacy + 팀 디렉토리** — 소개·개인정보처리방침 페이지 + `/teams` 디렉토리(검색).
-2. **step 4 · 데이터** — 샘플 → **실제 시드 팀**(목록 받으면). 이후 Vercel 연결·배포. ※클릭 동선 완비되어 실데이터 교체만 하면 됨.
+1. **step 4 · 데이터** — 샘플 → **실제 시드 팀**(목록 받으면, `sourceUrl` 필수) + 토스 후원 실링크 + 푸터 "예시" 고지 제거.
+2. **배포** — Vercel 연결·배포 + 도메인 `worshipers.life` 구매·연결 + favicon/OG.
+3. **런칭 후** — 카카오 애드핏 신청·GA4·Search Console. (팀 디렉토리 fast-follow도 옵션)
 
 ## 확정된 값
 

@@ -4,15 +4,14 @@
 
 ## 시점 (2026-06-09)
 
-- **단계**: Phase 1 진행 — **step 3b(홈) 완료**, tsc·lint·build 통과. → step 3c(상세 2종 + SEO).
+- **단계**: Phase 1 진행 — **step 3c(상세 2종 + SEO) 완료**, tsc·lint·build 통과(15 정적 페이지). → step 3d(about/privacy + 팀 디렉토리).
 - **브랜치**: `dev`(작업)·`main`(배포) 최신 커밋에 동기화. default `main`, merge 커밋 없음(fast-forward).
-- **코드**: 스캐폴딩·기반·셸·**홈** 완료 — `home-view`(client: 히어로·카테고리·필터(URL 상태)·KST 날짜 버킷·지난 모임 토글·광고·빈 상태). 상세/팀/about/privacy 미구현(샘플 데이터로 홈 동작).
+- **코드**: 홈 + **집회 상세·팀 상세·SEO** 완료 — `gatherings/[id]`·`teams/[id]`(SSG 전수 prerender + JSON-LD), `sitemap`/`robots`, 상태별 CTA·공유. about/privacy·팀 디렉토리 미구현(샘플 데이터로 동작).
 
 ## 다음 할 일 (재개 순서 — 구조 먼저)
 
-1. **step 3c · 상세 2종 + SEO** — `gatherings/[id]`·`teams/[id]` (`generateStaticParams`·`generateMetadata`·Event JSON-LD) + `lib/seo.ts` + sitemap/robots. (카드 클릭 → 상세 동작)
-2. **step 3d · about/privacy** (+ 팀 디렉토리 fast-follow).
-3. **step 4 · 데이터** — 샘플 → **실제 시드 팀**(목록 받으면). 이후 Vercel 연결·배포. ※상세 페이지(3c) 완성 후 권장(클릭 동선 살아있음).
+1. **step 3d · about/privacy + 팀 디렉토리** — 소개·개인정보처리방침 페이지 + `/teams` 디렉토리(검색).
+2. **step 4 · 데이터** — 샘플 → **실제 시드 팀**(목록 받으면). 이후 Vercel 연결·배포. ※클릭 동선 완비되어 실데이터 교체만 하면 됨.
 
 ## 확정된 값
 

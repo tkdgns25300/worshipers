@@ -47,24 +47,24 @@
 - [x] 상태 배지 + 빈 상태 + "지난 모임 보기" 토글
 - [x] 상태/다가오는 분기는 클라이언트 KST 계산 (ISR 미사용)
 
-### 1-4. 집회 상세 (`/gatherings/[id]`)
-- [ ] `generateStaticParams` 전수 생성
-- [ ] 핵심 정보 블록 (일시·장소·입장·등록·출처)
-- [ ] 주최 팀 카드 링크
-- [ ] `Event` JSON-LD + OG
+### 1-4. 집회 상세 (`/gatherings/[id]`) — 완료 (3c)
+- [x] `generateStaticParams` 전수 생성 (`dynamicParams=false`)
+- [x] 핵심 정보 블록 (일시·장소·입장·등록·출처) + 상태별 CTA·공유
+- [x] 주최 팀 카드 링크
+- [x] `Event` JSON-LD + OG
 
 ### 1-5. 팀 디렉토리·상세 (`/teams`, `/teams/[id]`)
-- [ ] 팀 카드 그리드 + 검색
-- [ ] 팀 상세 (소개·링크·대표곡) + 그 팀 다가오는 집회
+- [ ] 팀 카드 그리드 + 검색 (디렉토리 — 3d)
+- [x] 팀 상세 (소개·링크·대표곡) + 그 팀 다가오는 모임 (3c)
 
 ### 1-6. 부가 페이지
 - [ ] `/about` (소개·문의 mailto·후원·정정/삭제 요청 창구)
 - [ ] `/privacy` (광고·GA 쿠키 고지)
 
 ### 1-7. SEO·수익·런칭
-- [ ] `sitemap.ts` · `robots.ts`
+- [x] `sitemap.ts` · `robots.ts` (3c)
 - [ ] GA4 (`NEXT_PUBLIC_GA_ID`) + Search Console 등록
-- [ ] 광고 슬롯 컴포넌트 (애드핏/AdSense, 승인 후 노출, 정보 안 가리는 배치)
+- [x] 광고 슬롯 컴포넌트 (애드핏/AdSense, 승인 후 노출, 정보 안 가리는 배치) — 슬롯 배치 완료(홈·상세)
 - [ ] 후원 버튼 (토스 송금 링크/QR — about·푸터)
 - [ ] 광고 네트워크 신청 — 카카오 애드핏 우선(승인 쉬움), AdSense는 콘텐츠·트래픽 쌓인 뒤
 

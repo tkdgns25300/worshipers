@@ -10,7 +10,7 @@ export function Wordmark({ className }: { className?: string }) {
         <span className="absolute -right-0.5 -top-0.5 size-2.5 rounded-full bg-accent-500" />
       </span>
       <span className="text-lg font-bold tracking-tight text-ink">
-        wor<span className="text-brand-600">shi</span>pers
+        Wor<span className="text-brand-600">shi</span>pers
       </span>
     </Link>
   );

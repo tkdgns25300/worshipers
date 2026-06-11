@@ -5,7 +5,7 @@ import { SITE } from "@/constants/site";
 
 export const metadata: Metadata = {
   title: "개인정보처리방침",
-  description: "worshipers의 쿠키·광고·통계 정보 처리 방침.",
+  description: "Worshipers의 쿠키·광고·통계 정보 처리 방침.",
 };
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
@@ -37,7 +37,7 @@ export default function PrivacyPage() {
       <div className="mt-8 space-y-8">
         <Section title="1. 수집하는 정보">
           <p>
-            worshipers는 회원가입 및 로그인 기능을 제공하지 않으며, 이용자를 식별할 수 있는 개인정보를 직접 수집하지
+            Worshipers는 회원가입 및 로그인 기능을 제공하지 않으며, 이용자를 식별할 수 있는 개인정보를 직접 수집하지
             않습니다. 다만 서비스 개선을 위해 아래의 비식별 정보가 자동으로 수집될 수 있습니다.
           </p>
           <ul className="list-disc space-y-1 pl-5">

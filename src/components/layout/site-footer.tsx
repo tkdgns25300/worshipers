@@ -27,7 +27,7 @@ export function SiteFooter() {
             </a>
           </nav>
         </div>
-        <div className="text-xs text-ink-mute">© 2026 worshipers · 함께 드리는 예배</div>
+        <div className="text-xs text-ink-mute">© 2026 Worshipers · 함께 드리는 예배</div>
       </div>
     </footer>
   );

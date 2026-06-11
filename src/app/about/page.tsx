@@ -7,7 +7,7 @@ import { SITE } from "@/constants/site";
 
 export const metadata: Metadata = {
   title: "소개",
-  description: "worshipers는 전국의 워십 모임·예배팀 정보를 큐레이션하는, 독립적으로 운영되는 서비스입니다.",
+  description: "Worshipers는 전국의 워십 모임·예배팀 정보를 큐레이션하는, 독립적으로 운영되는 서비스입니다.",
 };
 
 const CARDS: { Icon: LucideIcon; title: string; body: string }[] = [
@@ -29,7 +29,7 @@ export default function AboutPage() {
         <Wordmark />
         <h1 className="mt-4 text-2xl font-bold text-ink md:text-3xl">흩어진 예배를 한 곳에 모읍니다</h1>
         <p className="mt-3 text-ink-soft">
-          worshipers는 전국의 워십 모임·예배팀 정보를 직접 큐레이션해 한눈에 보여주는, 독립적으로 운영되는 큐레이션
+          Worshipers는 전국의 워십 모임·예배팀 정보를 직접 큐레이션해 한눈에 보여주는, 독립적으로 운영되는 큐레이션
           서비스입니다. 운영은 광고와 후원으로 이루어집니다. 로그인도, 결제도 없습니다. 그저 오늘 함께 드릴 예배를 더 쉽게
           찾도록 돕습니다.
         </p>
@@ -50,7 +50,7 @@ export default function AboutPage() {
       <div className="mt-8 flex flex-col gap-4 rounded-2xl bg-accent-500 p-6 text-[#2a1c00] sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-lg font-bold">후원으로 함께 만들어요</h2>
-          <p className="mt-1 text-sm opacity-90">worshipers는 광고와 후원으로 운영됩니다. 작은 후원이 더 많은 예배를 모으는 힘이 됩니다.</p>
+          <p className="mt-1 text-sm opacity-90">Worshipers는 광고와 후원으로 운영됩니다. 작은 후원이 더 많은 예배를 모으는 힘이 됩니다.</p>
         </div>
         <DonateButton className="shrink-0 border-transparent bg-[#2a1c00] text-accent-50 hover:bg-[#2a1c00]/90" />
       </div>

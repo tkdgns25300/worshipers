@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Search, Info, type LucideIcon } from "lucide-react";
+import { Home, Users, Info, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 function Tab({ href, label, Icon, active }: { href: string; label: string; Icon: LucideIcon; active: boolean }) {
@@ -23,12 +23,13 @@ function Tab({ href, label, Icon, active }: { href: string; label: string; Icon:
 export function MobileNav() {
   const pathname = usePathname();
   const isHome = pathname === "/";
+  const isTeams = pathname.startsWith("/teams");
   const isAbout = pathname.startsWith("/about") || pathname.startsWith("/privacy");
 
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 flex border-t border-border bg-bg md:hidden">
       <Tab href="/" label="홈" Icon={Home} active={isHome} />
-      <Tab href="/" label="검색" Icon={Search} active={false} />
+      <Tab href="/teams" label="찬양팀" Icon={Users} active={isTeams} />
       <Tab href="/about" label="소개" Icon={Info} active={isAbout} />
     </nav>
   );

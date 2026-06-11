@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 
 const NAV = [
   { href: "/", label: "둘러보기" },
+  { href: "/teams", label: "찬양팀" },
   { href: "/about", label: "소개" },
 ] as const;
 

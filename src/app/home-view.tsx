@@ -26,6 +26,11 @@ export function HomeView({ gatherings, teams }: { gatherings: Gathering[]; teams
   const router = useRouter();
   const today = useMemo(() => todayKst(), []);
   const teamById = useMemo(() => new Map(teams.map((t) => [t.id, t])), [teams]);
+  // 카테고리 칩은 실제 데이터에 존재하는 종류만 (canonical 순서 유지). 데이터 추가 시 자동 노출.
+  const presentCategories = useMemo(
+    () => GATHERING_CATEGORIES.filter((c) => gatherings.some((g) => g.category === c)),
+    [gatherings],
+  );
 
   // 필터는 URL 파라미터 = 상태 (뒤로가기 복원). 검색은 입력 반응성 위해 로컬.
   const cat = sp.get("cat") ?? "all";
@@ -176,7 +181,7 @@ export function HomeView({ gatherings, teams }: { gatherings: Gathering[]; teams
 
       <div className="mt-6 flex gap-2 overflow-x-auto pb-1">
         <CatChip active={cat === "all"} onClick={() => setParam({ cat: null })} Icon={Sparkles} label="전체" />
-        {GATHERING_CATEGORIES.map((c) => (
+        {presentCategories.map((c) => (
           <CatChip key={c} active={cat === c} onClick={() => setParam({ cat: cat === c ? null : c })} Icon={CATEGORY_ICON[c]} label={c} />
         ))}
       </div>

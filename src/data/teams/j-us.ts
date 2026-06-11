@@ -1,0 +1,16 @@
+import type { Team } from "@/types/domain";
+
+export const team: Team = {
+  id: "j-us",
+  name: "제이어스",
+  nameEn: "J-US Worship",
+  description:
+    "제이어스(J-US)는 'Jesus is with us(예수님이 우리와 함께 계신다)'의 줄임말로, 2011년 첫 정기예배로 시작된 워십 사역입니다. 삶의 예배자를 일으켜 모든 영역에 하나님의 통치가 임하게 하는 것을 비전으로, 전국의 다음세대를 찾아가 예배합니다.",
+  regularSchedule: "정기예배 · 전국 순회 (주로 토요일)",
+  regions: ["경기", "충북"],
+  links: {
+    youtube: "https://www.youtube.com/user/JUSministry",
+    instagram: "https://www.instagram.com/jusworship",
+    homepage: "https://www.jusworship.com",
+  },
+};

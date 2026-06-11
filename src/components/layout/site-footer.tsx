@@ -27,10 +27,7 @@ export function SiteFooter() {
             </a>
           </nav>
         </div>
-        <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-ink-mute">
-          <span>© 2026 worshipers · 함께 드리는 예배</span>
-          <span>표시된 모든 정보·날짜는 예시입니다.</span>
-        </div>
+        <div className="text-xs text-ink-mute">© 2026 worshipers · 함께 드리는 예배</div>
       </div>
     </footer>
   );

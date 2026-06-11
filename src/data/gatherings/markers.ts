@@ -1,66 +1,32 @@
 import type { Gathering } from "@/types/domain";
 
-// SAMPLE — illustrative, not real schedules.
+// 마커스 목요예배 — 매주 목요일 19:30–21:30 (출처: 공식 홈페이지).
+// ⚠️ 날짜는 주간 패턴으로 생성됨. 방학 등 휴회 주는 확인 후 제외할 것.
+const VENUE: Gathering["venue"] = {
+  name: "맑은샘광천교회",
+  address: "서울 성북구 화랑로 192",
+  region: "서울",
+};
+
+const thursday = (date: string): Gathering => ({
+  id: `markers-${date}`,
+  teamId: "markers",
+  category: "정기예배",
+  title: "마커스 목요예배",
+  date,
+  startTime: "19:30",
+  endTime: "21:30",
+  venue: VENUE,
+  isFree: true,
+  registration: { required: false },
+  isOnline: true,
+  liveUrl: "https://www.youtube.com/markersworship",
+  sourceUrl: "https://markersworship.com",
+  note: "지하철 6호선 상월곡역 3번 출구 도보 1분.",
+});
+
 export const gatherings: Gathering[] = [
-  {
-    id: "markers-2026-06-07",
-    teamId: "markers",
-    category: "정기예배",
-    title: "마커스 정기예배 6월",
-    date: "2026-06-07",
-    startTime: "19:30",
-    endTime: "21:30",
-    venue: {
-      name: "온누리교회 서빙고 비전홀",
-      address: "서울 용산구 이촌로 347",
-      region: "서울",
-      mapUrl: "https://map.kakao.com",
-    },
-    isFree: true,
-    registration: { required: false },
-    isOnline: true,
-    liveUrl: "https://youtube.com",
-    sourceUrl: "https://example.com/notice/markers-0607",
-    note: "현장 좌석은 선착순이며 18:30부터 입장 가능합니다.",
-  },
-  {
-    id: "markers-2026-06-27",
-    teamId: "markers",
-    category: "수련회",
-    title: "마커스 워십 캠프 2026",
-    date: "2026-06-27",
-    startTime: "10:00",
-    venue: {
-      name: "가평 필그림하우스",
-      address: "경기 가평군 설악면 유명산길 12",
-      region: "경기",
-      mapUrl: "https://map.kakao.com",
-    },
-    isFree: false,
-    price: 88000,
-    registration: { required: true, url: "https://example.com/register/markers-camp", deadline: "2026-06-01" },
-    sourceUrl: "https://example.com/notice/markers-camp",
-    note: "1박 일정(익일 14:00 종료) · 정원 마감으로 대기 신청만 받습니다.",
-  },
-  {
-    id: "markers-2026-04-05",
-    teamId: "markers",
-    category: "절기예배",
-    title: "마커스 부활절 연합예배",
-    date: "2026-04-05",
-    startTime: "05:00",
-    endTime: "06:30",
-    venue: {
-      name: "여의도 한강공원 야외무대",
-      address: "서울 영등포구 여의동로 330",
-      region: "서울",
-      mapUrl: "https://map.kakao.com",
-    },
-    isFree: true,
-    registration: { required: false },
-    guests: ["위러브"],
-    isOnline: false,
-    sourceUrl: "https://example.com/notice/markers-easter",
-    note: "다시보기는 정보 출처에서 확인하세요.",
-  },
+  thursday("2026-06-11"),
+  thursday("2026-06-18"),
+  thursday("2026-06-25"),
 ];

@@ -25,12 +25,10 @@ export interface Team {
   id: string                 // 영어 kebab-case, 파일명·URL과 동일 (예: 'markers')
   name: string               // 한글 표기 (예: '마커스')
   nameEn?: string            // 영문 (예: 'Markers')
-  short?: string             // 아바타 이니셜 1~2자 (예: '마'). 없으면 name에서 파생
   description: string        // 한두 문단 소개
   denomination?: string      // 교단/신학 색깔·배경 (있으면)
-  homeBase?: string          // 소속 교회/단체 또는 주 활동지
   regularSchedule?: string   // 정기집회 주기 텍스트 (예: '매월 둘째 주 금요일')
-  regions?: Region[]         // 주 활동 지역
+  regions?: Region[]         // 활동 지역 (팀 '활동 지역' 표시용)
   links: {                   // 있는 것만. 모두 링크 아웃
     youtube?: string
     instagram?: string
@@ -38,7 +36,6 @@ export interface Team {
     kakao?: string
   }
   imageUrl?: string          // /images/teams/{id}.* — 직접 제작·허가분만
-  signatureSongs?: string[]  // 대표곡 곡명 텍스트만 (가사/악보 X)
 }
 
 export interface Gathering {
@@ -115,7 +112,7 @@ public/images/teams/{team-id}.png   팀 로고/대표 이미지
 [팀] 마커스 / Markers
 소개: (한 줄)
 링크: youtube= / instagram= / homepage= / kakao=
-지역: 서울    대표곡: a, b, c    이니셜(선택): 마
+지역: 서울
 
 [집회] 마커스 목요예배 6월
 팀: 마커스 · 종류: 정기예배 · 날짜: 2026-06-19 · 시간: 19:30-21:30
@@ -133,7 +130,7 @@ public/images/teams/{team-id}.png   팀 로고/대표 이미지
 
 | | 필수 | 선택 |
 |---|---|---|
-| **Team** | `id`·`name`·`description`·`links`(≥1) | `nameEn`·`short`·`denomination`·`homeBase`·`regularSchedule`·`regions`·`signatureSongs`·`imageUrl` |
+| **Team** | `id`·`name`·`description`·`links`(≥1) | `nameEn`·`denomination`·`regularSchedule`·`regions`·`imageUrl` |
 | **Gathering** | `id`·`teamId`·`category`·`date`·`venue`(name·region)·`isFree`·`registration`·**`sourceUrl`** | `title`·`startTime`·`endTime`·`venue.address`·`venue.mapUrl`·`price`·`guests`·`isOnline`·`liveUrl`·`note` |
 
 > 모르는 선택 필드는 비운다(임의 입력 금지). `id`는 입력자가 안 줘도 규칙(`{team-id}`, `{team-id}-{yyyy-mm-dd}`)대로 자동 부여.

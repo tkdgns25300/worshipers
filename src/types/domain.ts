@@ -22,15 +22,12 @@ export interface Team {
   id: string;
   name: string;
   nameEn?: string;
-  short?: string; // 아바타 이니셜 (예: "마")
   description: string;
   denomination?: string;
-  homeBase?: string;
   regularSchedule?: string;
   regions?: Region[];
   links: TeamLinks;
   imageUrl?: string;
-  signatureSongs?: string[];
 }
 
 export interface Venue {

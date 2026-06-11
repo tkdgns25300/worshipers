@@ -50,7 +50,7 @@ export function GatheringCard({ g, team, status }: { g: Gathering; team: Team; s
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-ink-mute">
           <span className="inline-flex items-center gap-1">
             <span className="inline-flex size-4 items-center justify-center rounded-full bg-brand-100 text-[9px] font-bold text-brand-700">
-              {team.short ?? team.name.slice(0, 1)}
+              {team.name.slice(0, 1)}
             </span>
             {team.name}
           </span>

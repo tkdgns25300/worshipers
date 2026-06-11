@@ -88,7 +88,7 @@ Full site: Home, Gathering detail, Team directory, Team detail, About, Privacy. 
 
 ## 7. Data shapes (use realistic fields)
 Mockups should bind to these shapes:
-- **Team**: `name`, `nameEn?`, `description`, `denomination?`, `homeBase?`, `regularSchedule?`, `regions?[]`, `links{ youtube?, instagram?, homepage?, kakao? }`, `imageUrl?`, `signatureSongs?[]`.
+- **Team**: `name`, `nameEn?`, `description`, `denomination?`, `regularSchedule?`, `regions?[]`, `links{ youtube?, instagram?, homepage?, kakao? }`, `imageUrl?`.
 - **Gathering**: `teamId`, `title?`, `date(YYYY-MM-DD)`, `startTime?`, `endTime?`, `venue{ name, address?, region, mapUrl? }`, `isFree`, `price?(KRW number)`, `registration{ required, url?, deadline? }`, `guests?[]`, `isOnline?`, `liveUrl?`, `sourceUrl`, `note?`.
 - `region` ∈ 시·도 (서울, 경기, 부산, …) + `온라인`.
 
@@ -154,7 +154,7 @@ Now extend it to complete an MVP. Mobile + desktop, light theme with dark-ready 
 Output tokens from the established look: color (incl. status), type scale, spacing, radius, shadow (Tailwind theme + CSS vars, light+dark); and the component set (header, footer, filter bar + chips, search, gathering card, status badge, category tag, team card, ad-slot placeholder labeled "광고", donation button, empty state).
 
 ## Data shapes (bind realistic content)
-- **Team**{ name, nameEn?, description, denomination?, homeBase?, regularSchedule?, regions?[], links{youtube?,instagram?,homepage?,kakao?}, imageUrl?, signatureSongs?[] }
+- **Team**{ name, nameEn?, description, denomination?, regularSchedule?, regions?[], links{youtube?,instagram?,homepage?,kakao?}, imageUrl? }
 - **Gathering**{ teamId, category(정기예배|연합예배|거리예배|수련회|기도모임|절기예배), title?, date, startTime?, endTime?, venue{name,address?,region,mapUrl?}, isFree, price?(KRW number), registration{required,url?,deadline?}, guests?[], isOnline?, liveUrl?, sourceUrl, note? }
 - region = 시·도 + 온라인.
 

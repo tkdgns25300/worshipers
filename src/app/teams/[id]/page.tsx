@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ChevronLeft, Calendar, MapPin, Youtube, Instagram, Globe, MessageCircle, Music, type LucideIcon } from "lucide-react";
+import { ChevronLeft, Calendar, MapPin, Youtube, Instagram, Globe, MessageCircle, type LucideIcon } from "lucide-react";
 import type { Team } from "@/types/domain";
 import { TEAMS } from "@/data/teams";
 import { getTeam, getTeamGatherings } from "@/lib/queries";
@@ -47,7 +47,7 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
           </Link>
           <div className="flex items-center gap-3">
             <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-white/20 text-xl font-bold">
-              {team.short ?? team.name.slice(0, 1)}
+              {team.name.slice(0, 1)}
             </span>
             <div>
               <h1 className="text-2xl font-bold">{team.name}</h1>
@@ -62,7 +62,7 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
       </div>
 
       <div className="mx-auto max-w-3xl space-y-6 px-4 py-6">
-        {(team.regularSchedule || team.homeBase) && (
+        {(team.regularSchedule || (team.regions && team.regions.length > 0)) && (
           <div className="grid grid-cols-2 gap-3">
             {team.regularSchedule && (
               <div className="rounded-xl border border-border bg-surface p-3">
@@ -73,13 +73,13 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
                 <div className="mt-1 text-sm font-medium text-ink">{team.regularSchedule}</div>
               </div>
             )}
-            {team.homeBase && (
+            {team.regions && team.regions.length > 0 && (
               <div className="rounded-xl border border-border bg-surface p-3">
                 <div className="flex items-center gap-1.5 text-xs text-ink-mute">
                   <MapPin className="size-3.5" aria-hidden />
                   활동 지역
                 </div>
-                <div className="mt-1 text-sm font-medium text-ink">{team.homeBase}</div>
+                <div className="mt-1 text-sm font-medium text-ink">{team.regions.join(" · ")}</div>
               </div>
             )}
           </div>
@@ -99,23 +99,6 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
                 {l.label}
               </a>
             ))}
-          </div>
-        )}
-
-        {team.signatureSongs && team.signatureSongs.length > 0 && (
-          <div>
-            <h2 className="mb-2 text-sm font-semibold text-ink-soft">대표곡</h2>
-            <div className="flex flex-wrap gap-2">
-              {team.signatureSongs.map((s) => (
-                <span
-                  key={s}
-                  className="inline-flex items-center gap-1 rounded-full border border-border bg-surface-2 px-3 py-1 text-sm text-ink-soft"
-                >
-                  <Music className="size-3.5" aria-hidden />
-                  {s}
-                </span>
-              ))}
-            </div>
           </div>
         )}
 

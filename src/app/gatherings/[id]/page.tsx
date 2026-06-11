@@ -94,7 +94,7 @@ export default async function GatheringPage({ params }: { params: Promise<{ id: 
             className="mt-3 inline-flex items-center gap-2 rounded-full bg-white/15 py-1 pl-1 pr-3 text-sm"
           >
             <span className="grid size-6 place-items-center rounded-full bg-white/25 text-xs font-bold">
-              {team.short ?? team.name.slice(0, 1)}
+              {team.name.slice(0, 1)}
             </span>
             {team.name}
             <ChevronRight className="size-4" aria-hidden />

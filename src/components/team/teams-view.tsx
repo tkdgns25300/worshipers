@@ -40,7 +40,7 @@ export function TeamsView({ teams }: { teams: Team[] }) {
             >
               <div className="flex items-center gap-3">
                 <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-brand-400 to-brand-700 text-lg font-bold text-white">
-                  {t.short ?? t.name.slice(0, 1)}
+                  {t.name.slice(0, 1)}
                 </span>
                 <div className="min-w-0">
                   <div className="truncate font-semibold text-ink">{t.name}</div>

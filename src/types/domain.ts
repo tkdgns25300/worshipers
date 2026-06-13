@@ -14,6 +14,8 @@ export type GatheringStatus = "예정" | "오늘" | "등록마감" | "종료";
 export interface TeamLinks {
   youtube?: string;
   instagram?: string;
+  facebook?: string;
+  blog?: string; // 네이버 블로그 등
   homepage?: string;
   kakao?: string;
 }

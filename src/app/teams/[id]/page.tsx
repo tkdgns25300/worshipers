@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ChevronLeft, Calendar, MapPin, Youtube, Instagram, Globe, MessageCircle, type LucideIcon } from "lucide-react";
+import { ChevronLeft, Calendar, MapPin, Youtube, Instagram, Facebook, Rss, Globe, MessageCircle, type LucideIcon } from "lucide-react";
 import type { Team } from "@/types/domain";
 import { TEAMS } from "@/data/teams";
 import { getTeam, getTeamGatherings } from "@/lib/queries";
@@ -25,6 +25,8 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 const LINKS: { key: keyof Team["links"]; label: string; Icon: LucideIcon }[] = [
   { key: "youtube", label: "YouTube", Icon: Youtube },
   { key: "instagram", label: "Instagram", Icon: Instagram },
+  { key: "facebook", label: "Facebook", Icon: Facebook },
+  { key: "blog", label: "블로그", Icon: Rss },
   { key: "homepage", label: "홈페이지", Icon: Globe },
   { key: "kakao", label: "카카오", Icon: MessageCircle },
 ];

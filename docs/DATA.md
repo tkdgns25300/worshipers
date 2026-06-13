@@ -32,6 +32,8 @@ export interface Team {
   links: {                   // 있는 것만. 모두 링크 아웃
     youtube?: string
     instagram?: string
+    facebook?: string
+    blog?: string            // 네이버 블로그 등
     homepage?: string
     kakao?: string
   }
@@ -111,7 +113,7 @@ public/images/teams/{team-id}.png   팀 로고/대표 이미지
 ```
 [팀] 마커스 / Markers
 소개: (한 줄)
-링크: youtube= / instagram= / homepage= / kakao=
+링크: youtube= / instagram= / facebook= / blog= / homepage= / kakao=
 지역: 서울
 
 [집회] 마커스 목요예배 6월

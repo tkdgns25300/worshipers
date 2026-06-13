@@ -11,6 +11,7 @@ export const team: Team = {
   links: {
     youtube: "https://www.youtube.com/user/JUSministry",
     instagram: "https://www.instagram.com/jusworship",
+    facebook: "https://www.facebook.com/page.J.US",
     homepage: "https://www.jusworship.com",
   },
 };

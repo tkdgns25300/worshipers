@@ -36,9 +36,14 @@ export function gatheringJsonLd(g: Gathering, team: Team) {
 
 // schema.org MusicGroup JSON-LD (팀)
 export function teamJsonLd(team: Team) {
-  const sameAs = [team.links.youtube, team.links.instagram, team.links.homepage, team.links.kakao].filter(
-    (u): u is string => Boolean(u),
-  );
+  const sameAs = [
+    team.links.youtube,
+    team.links.instagram,
+    team.links.facebook,
+    team.links.blog,
+    team.links.homepage,
+    team.links.kakao,
+  ].filter((u): u is string => Boolean(u));
   return {
     "@context": "https://schema.org",
     "@type": "MusicGroup",

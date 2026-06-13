@@ -9,7 +9,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://worshipers.life";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Worshipers — 한국 예배 모임·집회 디렉터리",
+    default: "Worshipers",
     template: "%s | Worshipers",
   },
   description:

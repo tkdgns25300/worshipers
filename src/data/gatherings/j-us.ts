@@ -36,6 +36,8 @@ export const gatherings: Gathering[] = [
     category: "정기예배",
     title: "제이어스 7월 정기예배",
     date: "2026-07-25",
+    startTime: "14:00",
+    endTime: "19:00",
     venue: {
       name: "물맷돌중앙교회",
       address: "충청북도 청주시 서원구 내수동로 185",
@@ -43,8 +45,9 @@ export const gatherings: Gathering[] = [
     },
     isFree: true,
     registration: { required: false },
-    guests: ["잔치공동체", "키퍼스워십", "안호성 목사", "김선교 선교사"],
+    guestTeamIds: ["feast"],
+    guests: ["키퍼스워십", "안호성 목사", "김선교 선교사"],
     sourceUrl: SOURCE,
-    note: "구 청주중앙순복음교회. 찬양 제이어스·잔치공동체·키퍼스워십.",
+    note: "3세션 약 5시간 연속 예배, 3000명 현장 선착순 입장. 당일 교회 주차 어려움(공영주차장·대중교통 권장). 구 청주중앙순복음교회.",
   },
 ];

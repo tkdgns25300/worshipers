@@ -64,14 +64,15 @@ export function HomeView({ gatherings, teams }: { gatherings: Gathering[]; teams
   const q = query.trim().toLowerCase();
   const matches = (g: Gathering): boolean => {
     if (cat !== "all" && g.category !== cat) return false;
-    if (teamSel.length && !teamSel.includes(g.teamId)) return false;
+    if (teamSel.length && !teamSel.some((id) => g.teamId === id || g.guestTeamIds?.includes(id))) return false;
     if (region) {
       if (region === "온라인" ? !g.isOnline : g.venue?.region !== region) return false;
     }
     if (free && !g.isFree) return false;
     if (!q) return true;
     const t = teamById.get(g.teamId);
-    return [g.title, g.category, g.venue?.name, g.venue?.region, t?.name, t?.nameEn].some((s) =>
+    const guestTeamNames = (g.guestTeamIds ?? []).map((id) => teamById.get(id)?.name);
+    return [g.title, g.category, g.venue?.name, g.venue?.region, t?.name, t?.nameEn, ...guestTeamNames].some((s) =>
       s?.toLowerCase().includes(q),
     );
   };

@@ -26,8 +26,9 @@ export function getGathering(id: string): Gathering | undefined {
   return GATHERINGS.find((g) => g.id === id);
 }
 
+// 그 팀이 주최(teamId)했거나 참여 워십팀(guestTeamIds)으로 함께한 집회.
 export function getTeamGatherings(teamId: string): Gathering[] {
-  return GATHERINGS.filter((g) => g.teamId === teamId).sort(byDateAsc);
+  return GATHERINGS.filter((g) => g.teamId === teamId || g.guestTeamIds?.includes(teamId)).sort(byDateAsc);
 }
 
 /** 주어진 목록을 날짜 버킷으로 그룹: 오늘(진행 중 포함) / 이번 주(≤7일) / 다가오는 모임(>7일). 종료된 모임은 제외. */

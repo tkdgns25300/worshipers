@@ -7,12 +7,14 @@ import {
   Ticket,
   Pencil,
   Mic,
+  Users,
   Wifi,
   ExternalLink,
   ChevronLeft,
   ChevronRight,
   type LucideIcon,
 } from "lucide-react";
+import type { Team } from "@/types/domain";
 import { GATHERINGS } from "@/data/gatherings";
 import { getGathering, getTeam } from "@/lib/queries";
 import { gatheringJsonLd, absoluteUrl } from "@/lib/seo";
@@ -60,6 +62,7 @@ export default async function GatheringPage({ params }: { params: Promise<{ id: 
   if (!g) notFound();
   const team = getTeam(g.teamId);
   if (!team) notFound();
+  const guestTeams = (g.guestTeamIds ?? []).map((id) => getTeam(id)).filter((t): t is Team => Boolean(t));
 
   const fmtDate = (iso: string) => {
     const [y, m, d] = iso.split("-").map(Number);
@@ -141,6 +144,17 @@ export default async function GatheringPage({ params }: { params: Promise<{ id: 
                 ? `사전등록 필요${deadlineLabel ? ` · 마감 ${deadlineLabel}` : ""}`
                 : "현장 참석 (등록 불필요)"}
           </InfoRow>
+          {guestTeams.length > 0 && (
+            <InfoRow icon={Users} label="함께하는 팀">
+              <span className="flex flex-wrap gap-x-2 gap-y-1">
+                {guestTeams.map((t) => (
+                  <Link key={t.id} href={`/teams/${t.id}`} className="text-brand-600 hover:underline">
+                    {t.name}
+                  </Link>
+                ))}
+              </span>
+            </InfoRow>
+          )}
           {g.guests && g.guests.length > 0 && (
             <InfoRow icon={Mic} label="게스트">
               {g.guests.join(", ")}

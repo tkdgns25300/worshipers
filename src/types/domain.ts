@@ -58,7 +58,8 @@ export interface Gathering {
   isFree?: boolean; // 미정이면 생략
   price?: number; // 원(KRW)
   registration?: Registration; // 미정이면 생략
-  guests?: string[];
+  guestTeamIds?: string[]; // 함께하는 디렉터리 팀 id (참여 워십팀) — 그 팀 페이지에도 노출·링크
+  guests?: string[]; // 비-디렉터리 게스트·강사 이름 (문자열)
   isOnline?: boolean; // 온라인 송출 있음 (하이브리드 포함). 순수 온라인은 venue.region="온라인"
   liveUrl?: string;
   sourceUrl: string; // 필수 — 공식 공지 출처

@@ -62,7 +62,8 @@ export interface Gathering {
     url?: string             // 공식 등록 페이지 (링크 아웃)
     deadline?: string        // ISO date — 지나면 상태 '등록마감'
   }
-  guests?: string[]          // 게스트/협력팀
+  guestTeamIds?: string[]    // 함께하는 디렉터리 팀 id (참여 워십팀) — 그 팀 페이지에도 교차 노출·링크
+  guests?: string[]          // 비-디렉터리 게스트·강사 이름 (문자열)
   isOnline?: boolean         // 온라인 송출 있음 (오프라인+송출 하이브리드 포함). 순수 온라인은 venue.region='온라인'
   liveUrl?: string           // 온라인 송출 링크 (isOnline일 때)
   sourceUrl: string          // 필수 — 공식 공지 출처
@@ -134,10 +135,11 @@ public/images/teams/{team-id}.png   팀 로고/대표 이미지
 | | 필수 | 선택 |
 |---|---|---|
 | **Team** | `id`·`name`·`description`·`links`(≥1) | `nameEn`·`denomination`·`regularSchedule`·`regions`·`imageUrl` |
-| **Gathering** | `id`·`teamId`·`category`·`date`·**`sourceUrl`** | `venue`(name·region)·`isFree`·`registration`·`title`·`startTime`·`endTime`·`endDate`·`venue.address`·`venue.mapUrl`·`price`·`guests`·`isOnline`·`liveUrl`·`note` |
+| **Gathering** | `id`·`teamId`·`category`·`date`·**`sourceUrl`** | `venue`(name·region)·`isFree`·`registration`·`title`·`startTime`·`endTime`·`endDate`·`venue.address`·`venue.mapUrl`·`price`·`guests`·`guestTeamIds`·`isOnline`·`liveUrl`·`note` |
 
 > 모르는 선택 필드는 비운다(임의 입력 금지). `id`는 입력자가 안 줘도 규칙(`{team-id}`, `{team-id}-{yyyy-mm-dd}`)대로 자동 부여.
 > **보통 집회는 `venue`·`isFree`·`registration`을 채운다.** 단 **SAVE THE DATE 티저**(날짜·이름만 공지)는 이들을 생략 가능 → UI가 '추후 공지'로 표시, 공식 공지 뜨면 채운다.
+> **여러 워십팀이 함께하는 집회**: 주최/대표 팀을 `teamId`로, 함께하는 *디렉터리 등록* 워십팀은 `guestTeamIds`(그 팀 페이지에도 교차 노출·링크), 미등록 팀·강사는 `guests`(문자열). 주최가 디렉터리 팀이 아니면(예: G2A 무브먼트) 워십 맡은 팀에 귀속. (구조 고도화는 ROADMAP Phase 2)
 
 ## 데이터 운영 전략 (유지 부담 줄이기)
 

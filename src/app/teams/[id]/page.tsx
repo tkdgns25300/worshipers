@@ -106,7 +106,7 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
 
         <div>
           <h2 className="mb-2 text-lg font-bold text-ink">다가오는 모임</h2>
-          <TeamGatherings team={team} gatherings={getTeamGatherings(team.id)} />
+          <TeamGatherings team={team} gatherings={getTeamGatherings(team.id)} teams={TEAMS} />
         </div>
       </div>
     </article>

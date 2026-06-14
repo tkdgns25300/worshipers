@@ -6,7 +6,7 @@ import { Search, X, SlidersHorizontal, ChevronDown, Sparkles, type LucideIcon } 
 import type { Gathering, Team } from "@/types/domain";
 import { GATHERING_CATEGORIES } from "@/constants/categories";
 import { REGIONS } from "@/constants/regions";
-import { todayKst, daysUntil, getGatheringStatus } from "@/lib/gathering-status";
+import { todayKst, daysUntil, getGatheringStatus, gatheringEndDate } from "@/lib/gathering-status";
 import { groupUpcoming } from "@/lib/queries";
 import { cn } from "@/lib/utils";
 import { GatheringCard } from "@/components/gathering/gathering-card";
@@ -78,15 +78,16 @@ export function HomeView({ gatherings, teams }: { gatherings: Gathering[]; teams
   const inPeriod = (g: Gathering): boolean => {
     if (period === "all") return true;
     const n = daysUntil(g.date, today);
-    return period === "week" ? n >= 0 && n <= 7 : n >= 0 && n <= 31;
+    if (n < 0) return true; // 진행 중(다중일)
+    return period === "week" ? n <= 7 : n <= 31;
   };
 
   const matched = gatherings.filter(matches);
   const buckets = groupUpcoming(
-    matched.filter((g) => g.date >= today && inPeriod(g)),
+    matched.filter((g) => gatheringEndDate(g) >= today && inPeriod(g)),
     today,
   );
-  const past = matched.filter((g) => g.date < today).sort((a, b) => b.date.localeCompare(a.date));
+  const past = matched.filter((g) => gatheringEndDate(g) < today).sort((a, b) => b.date.localeCompare(a.date));
   const total = buckets.reduce((n, b) => n + b.items.length, 0);
   const activeFilters =
     (cat !== "all" ? 1 : 0) + (teamSel.length ? 1 : 0) + (region ? 1 : 0) + (period !== "all" ? 1 : 0) + (free ? 1 : 0);

@@ -14,10 +14,15 @@ export function daysUntil(dateIso: string, today: string): number {
   return Math.round((target - base) / 86_400_000);
 }
 
-/** date·registration.deadline·오늘(KST)로 상태 파생. 저장하지 않는다. */
+/** 집회 종료일 (다중일이면 endDate, 단일일이면 date). 진행 중/종료 판정의 단일 기준. */
+export function gatheringEndDate(g: Gathering): string {
+  return g.endDate ?? g.date;
+}
+
+/** date·endDate·registration.deadline·오늘(KST)로 상태 파생. 저장하지 않는다. */
 export function getGatheringStatus(g: Gathering, today: string): GatheringStatus {
-  if (g.date < today) return "종료";
-  if (g.date === today) return "오늘";
+  if (gatheringEndDate(g) < today) return "종료";
+  if (g.date <= today) return "오늘"; // 시작했고 아직 안 끝남(다중일 진행 중 포함)
   if (g.registration?.required && g.registration.deadline && g.registration.deadline < today) return "등록마감";
   return "예정";
 }

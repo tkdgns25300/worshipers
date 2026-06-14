@@ -45,7 +45,8 @@ export interface Gathering {
   teamId: string             // Team.id 참조
   category: GatheringCategory // 집회 유형 (홈 카테고리 필터)
   title?: string             // 집회 테마/타이틀 (있으면)
-  date: string               // ISO date 'YYYY-MM-DD' (KST 기준 날짜)
+  date: string               // ISO date 'YYYY-MM-DD' (KST 기준 날짜, 다중일이면 시작일)
+  endDate?: string           // 다중일 집회의 종료일 'YYYY-MM-DD' (단일일이면 생략) — 진행 중/종료 판정 기준
   startTime?: string         // 'HH:mm'
   endTime?: string           // 'HH:mm'
   venue?: {                  // 미정(SAVE THE DATE 티저)이면 생략
@@ -133,7 +134,7 @@ public/images/teams/{team-id}.png   팀 로고/대표 이미지
 | | 필수 | 선택 |
 |---|---|---|
 | **Team** | `id`·`name`·`description`·`links`(≥1) | `nameEn`·`denomination`·`regularSchedule`·`regions`·`imageUrl` |
-| **Gathering** | `id`·`teamId`·`category`·`date`·**`sourceUrl`** | `venue`(name·region)·`isFree`·`registration`·`title`·`startTime`·`endTime`·`venue.address`·`venue.mapUrl`·`price`·`guests`·`isOnline`·`liveUrl`·`note` |
+| **Gathering** | `id`·`teamId`·`category`·`date`·**`sourceUrl`** | `venue`(name·region)·`isFree`·`registration`·`title`·`startTime`·`endTime`·`endDate`·`venue.address`·`venue.mapUrl`·`price`·`guests`·`isOnline`·`liveUrl`·`note` |
 
 > 모르는 선택 필드는 비운다(임의 입력 금지). `id`는 입력자가 안 줘도 규칙(`{team-id}`, `{team-id}-{yyyy-mm-dd}`)대로 자동 부여.
 > **보통 집회는 `venue`·`isFree`·`registration`을 채운다.** 단 **SAVE THE DATE 티저**(날짜·이름만 공지)는 이들을 생략 가능 → UI가 '추후 공지'로 표시, 공식 공지 뜨면 채운다.

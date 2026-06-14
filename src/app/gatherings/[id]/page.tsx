@@ -61,10 +61,13 @@ export default async function GatheringPage({ params }: { params: Promise<{ id: 
   const team = getTeam(g.teamId);
   if (!team) notFound();
 
-  const [year, month, day] = g.date.split("-").map(Number);
-  const wd = WEEKDAYS[new Date(year, month - 1, day).getDay()];
+  const fmtDate = (iso: string) => {
+    const [y, m, d] = iso.split("-").map(Number);
+    return `${y}.${String(m).padStart(2, "0")}.${String(d).padStart(2, "0")} (${WEEKDAYS[new Date(y, m - 1, d).getDay()]})`;
+  };
   const dateLabel =
-    `${year}.${String(month).padStart(2, "0")}.${String(day).padStart(2, "0")} (${wd})` +
+    fmtDate(g.date) +
+    (g.endDate ? ` – ${fmtDate(g.endDate)}` : "") +
     (g.startTime ? ` · ${g.startTime}${g.endTime ? ` – ${g.endTime}` : ""}` : "");
   const deadlineLabel = g.registration?.deadline ? g.registration.deadline.slice(5).replace("-", ".") : null;
 

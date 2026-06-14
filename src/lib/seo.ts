@@ -18,7 +18,9 @@ export function gatheringJsonLd(g: Gathering, team: Team) {
     "@type": "Event",
     name: g.title ?? `${team.name} ${g.category}`,
     startDate: g.startTime ? `${g.date}T${g.startTime}:00+09:00` : g.date,
-    ...(g.endTime ? { endDate: `${g.date}T${g.endTime}:00+09:00` } : {}),
+    ...(g.endDate || g.endTime
+      ? { endDate: g.endTime ? `${g.endDate ?? g.date}T${g.endTime}:00+09:00` : (g.endDate ?? g.date) }
+      : {}),
     eventAttendanceMode: onlineOnly
       ? "https://schema.org/OnlineEventAttendanceMode"
       : g.isOnline

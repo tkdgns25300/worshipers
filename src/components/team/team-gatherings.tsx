@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { Calendar } from "lucide-react";
 import type { Gathering, Team } from "@/types/domain";
-import { todayKst, getGatheringStatus } from "@/lib/gathering-status";
+import { todayKst, getGatheringStatus, gatheringEndDate } from "@/lib/gathering-status";
 import { GatheringCard } from "@/components/gathering/gathering-card";
 import { EmptyState } from "@/components/gathering/empty-state";
 
@@ -11,7 +11,7 @@ import { EmptyState } from "@/components/gathering/empty-state";
 export function TeamGatherings({ team, gatherings }: { team: Team; gatherings: Gathering[] }) {
   const today = useMemo(() => todayKst(), []);
   const upcoming = useMemo(
-    () => gatherings.filter((g) => g.date >= today).sort((a, b) => a.date.localeCompare(b.date)),
+    () => gatherings.filter((g) => gatheringEndDate(g) >= today).sort((a, b) => a.date.localeCompare(b.date)),
     [gatherings, today],
   );
 

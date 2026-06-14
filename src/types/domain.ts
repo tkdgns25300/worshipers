@@ -50,7 +50,8 @@ export interface Gathering {
   teamId: string;
   category: GatheringCategory;
   title?: string;
-  date: string; // "YYYY-MM-DD" (KST 기준)
+  date: string; // "YYYY-MM-DD" (KST 기준, 다중일이면 시작일)
+  endDate?: string; // 다중일 집회의 종료일 "YYYY-MM-DD" (단일일이면 생략)
   startTime?: string; // "HH:mm"
   endTime?: string;
   venue?: Venue; // 미정(예: SAVE THE DATE 티저)이면 생략

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Clock, MapPin, Wifi, ChevronRight } from "lucide-react";
+import { Clock, MapPin, Wifi, CalendarDays, ChevronRight } from "lucide-react";
 import type { Gathering, GatheringStatus, Team } from "@/types/domain";
 import { cn } from "@/lib/utils";
 import { StatusBadge } from "./status-badge";
@@ -16,6 +16,9 @@ export function GatheringCard({ g, team, status }: { g: Gathering; team: Team; s
   const [year, month, day] = g.date.split("-").map(Number);
   const weekday = WEEKDAYS[new Date(year, month - 1, day).getDay()];
   const isToday = status === "오늘";
+  const rangeLabel = g.endDate
+    ? `${month}.${day}–${Number(g.endDate.split("-")[1])}.${Number(g.endDate.split("-")[2])}`
+    : null;
 
   return (
     <Link
@@ -55,6 +58,12 @@ export function GatheringCard({ g, team, status }: { g: Gathering; team: Team; s
             </span>
             {team.name}
           </span>
+          {rangeLabel && (
+            <span className="inline-flex items-center gap-1 font-medium text-ink-soft">
+              <CalendarDays className="size-3.5" aria-hidden />
+              {rangeLabel}
+            </span>
+          )}
           {g.startTime && (
             <span className="inline-flex items-center gap-1">
               <Clock className="size-3.5" aria-hidden />

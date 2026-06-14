@@ -41,8 +41,8 @@ export const gatherings: Gathering[] = [
     venue: VENUE,
     isFree: true,
     registration: { required: true, url: "https://forms.gle/T1qmpD7qeXbwNX3D7" }, // 2026 MC 등록 폼
-    guests: ["아이자야 씩스티원", "Garth Gustafson (YWAM UofN)"],
+    guests: ["아이자야씩스티원", "Garth Gustafson (YWAM UofN)"],
     sourceUrl: "https://www.instagram.com/ywamcmk",
-    note: "사흘 연속 저녁 집회, 예배 중 헌금 시간 있음. 워십 예수전도단 화요모임·아이자야 씩스티원.",
+    note: "사흘 연속 저녁 집회, 예배 중 헌금 시간 있음. 워십 예수전도단 화요모임·아이자야씩스티원.",
   },
 ];

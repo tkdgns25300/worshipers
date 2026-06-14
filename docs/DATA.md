@@ -19,7 +19,7 @@ export type Region =
 
 // 집회 유형 (홈 카테고리 칩 — '전체'는 필터 기본값이라 enum에 없음)
 export type GatheringCategory =
-  | '정기예배' | '연합예배' | '거리예배' | '수련회' | '기도모임' | '절기예배'
+  | '정기예배' | '찬양집회' | '연합예배' | '거리예배' | '수련회' | '기도모임' | '절기예배'
 
 export interface Team {
   id: string                 // 영어 kebab-case, 파일명·URL과 동일 (예: 'markers')
@@ -48,15 +48,15 @@ export interface Gathering {
   date: string               // ISO date 'YYYY-MM-DD' (KST 기준 날짜)
   startTime?: string         // 'HH:mm'
   endTime?: string           // 'HH:mm'
-  venue: {
+  venue?: {                  // 미정(SAVE THE DATE 티저)이면 생략
     name: string             // 장소명 (예: '온누리교회 서빙고'). 순수 온라인이면 플랫폼명 또는 '온라인'
     address?: string         // 도로명 주소
     region: Region
     mapUrl?: string          // 외부 지도 링크 (임베드 아님)
   }
-  isFree: boolean
+  isFree?: boolean           // 미정이면 생략
   price?: number             // 유료 시 금액(원, KRW 정수). 표시 포맷은 UI에서. JSON-LD offers.price + priceCurrency 'KRW'
-  registration: {
+  registration?: {           // 미정이면 생략
     required: boolean
     url?: string             // 공식 등록 페이지 (링크 아웃)
     deadline?: string        // ISO date — 지나면 상태 '등록마감'
@@ -124,7 +124,7 @@ public/images/teams/{team-id}.png   팀 로고/대표 이미지
 출처: https://…   ← 필수
 ```
 
-- **종류(category)**: `정기예배 · 연합예배 · 거리예배 · 수련회 · 기도모임 · 절기예배`
+- **종류(category)**: `정기예배 · 찬양집회 · 연합예배 · 거리예배 · 수련회 · 기도모임 · 절기예배`
 - **지역(region)**: 시·도(서울·경기·부산 …) 또는 `온라인`
 - **입장**: `무료` 또는 금액(원, 숫자) · **등록**: `불필요` 또는 `필요 + 링크 + 마감(YYYY-MM-DD)`
 
@@ -133,9 +133,10 @@ public/images/teams/{team-id}.png   팀 로고/대표 이미지
 | | 필수 | 선택 |
 |---|---|---|
 | **Team** | `id`·`name`·`description`·`links`(≥1) | `nameEn`·`denomination`·`regularSchedule`·`regions`·`imageUrl` |
-| **Gathering** | `id`·`teamId`·`category`·`date`·`venue`(name·region)·`isFree`·`registration`·**`sourceUrl`** | `title`·`startTime`·`endTime`·`venue.address`·`venue.mapUrl`·`price`·`guests`·`isOnline`·`liveUrl`·`note` |
+| **Gathering** | `id`·`teamId`·`category`·`date`·**`sourceUrl`** | `venue`(name·region)·`isFree`·`registration`·`title`·`startTime`·`endTime`·`venue.address`·`venue.mapUrl`·`price`·`guests`·`isOnline`·`liveUrl`·`note` |
 
 > 모르는 선택 필드는 비운다(임의 입력 금지). `id`는 입력자가 안 줘도 규칙(`{team-id}`, `{team-id}-{yyyy-mm-dd}`)대로 자동 부여.
+> **보통 집회는 `venue`·`isFree`·`registration`을 채운다.** 단 **SAVE THE DATE 티저**(날짜·이름만 공지)는 이들을 생략 가능 → UI가 '추후 공지'로 표시, 공식 공지 뜨면 채운다.
 
 ## 데이터 운영 전략 (유지 부담 줄이기)
 

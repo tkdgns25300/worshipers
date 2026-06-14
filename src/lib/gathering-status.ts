@@ -18,7 +18,6 @@ export function daysUntil(dateIso: string, today: string): number {
 export function getGatheringStatus(g: Gathering, today: string): GatheringStatus {
   if (g.date < today) return "종료";
   if (g.date === today) return "오늘";
-  const { required, deadline } = g.registration;
-  if (required && deadline && deadline < today) return "등록마감";
+  if (g.registration?.required && g.registration.deadline && g.registration.deadline < today) return "등록마감";
   return "예정";
 }

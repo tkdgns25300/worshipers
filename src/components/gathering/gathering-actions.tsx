@@ -58,7 +58,7 @@ export function GatheringActions({ g }: { g: Gathering }) {
     );
   }
 
-  if (g.registration.required) {
+  if (g.registration?.required) {
     const closed = status === "등록마감";
     return (
       <div className="flex gap-2">
@@ -70,7 +70,7 @@ export function GatheringActions({ g }: { g: Gathering }) {
             등록마감
           </button>
         ) : (
-          <a href={g.registration.url ?? g.sourceUrl} target="_blank" rel="noopener noreferrer" className={cn(PRIMARY, "flex-1")}>
+          <a href={g.registration?.url ?? g.sourceUrl} target="_blank" rel="noopener noreferrer" className={cn(PRIMARY, "flex-1")}>
             <ExternalLink className="size-4" aria-hidden />
             등록하기
           </a>

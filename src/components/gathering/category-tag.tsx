@@ -1,9 +1,10 @@
-import { Flame, Users, Sunrise, Tent, Sparkles, Star, type LucideIcon } from "lucide-react";
+import { Flame, Music, Users, Sunrise, Tent, Sparkles, Star, type LucideIcon } from "lucide-react";
 import type { GatheringCategory } from "@/types/domain";
 import { cn } from "@/lib/utils";
 
 export const CATEGORY_ICON: Record<GatheringCategory, LucideIcon> = {
   정기예배: Flame,
+  찬양집회: Music,
   연합예배: Users,
   거리예배: Sunrise,
   수련회: Tent,

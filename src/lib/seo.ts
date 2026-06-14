@@ -7,7 +7,12 @@ export function absoluteUrl(path: string): string {
 
 // schema.org Event JSON-LD (집회 상세)
 export function gatheringJsonLd(g: Gathering, team: Team) {
-  const onlineOnly = g.venue.region === "온라인";
+  const onlineOnly = g.venue?.region === "온라인";
+  const location = onlineOnly
+    ? { "@type": "VirtualLocation", url: g.liveUrl ?? g.sourceUrl }
+    : g.venue
+      ? { "@type": "Place", name: g.venue.name, ...(g.venue.address ? { address: g.venue.address } : {}) }
+      : null;
   return {
     "@context": "https://schema.org",
     "@type": "Event",
@@ -19,17 +24,19 @@ export function gatheringJsonLd(g: Gathering, team: Team) {
       : g.isOnline
         ? "https://schema.org/MixedEventAttendanceMode"
         : "https://schema.org/OfflineEventAttendanceMode",
-    location: onlineOnly
-      ? { "@type": "VirtualLocation", url: g.liveUrl ?? g.sourceUrl }
-      : { "@type": "Place", name: g.venue.name, ...(g.venue.address ? { address: g.venue.address } : {}) },
+    ...(location ? { location } : {}),
     organizer: { "@type": "Organization", name: team.name, ...(team.links.homepage ? { url: team.links.homepage } : {}) },
-    offers: {
-      "@type": "Offer",
-      price: g.isFree ? 0 : (g.price ?? 0),
-      priceCurrency: "KRW",
-      url: g.registration.url ?? g.sourceUrl,
-      availability: "https://schema.org/InStock",
-    },
+    ...(g.isFree !== undefined
+      ? {
+          offers: {
+            "@type": "Offer",
+            price: g.isFree ? 0 : (g.price ?? 0),
+            priceCurrency: "KRW",
+            url: g.registration?.url ?? g.sourceUrl,
+            availability: "https://schema.org/InStock",
+          },
+        }
+      : {}),
     url: absoluteUrl(`/gatherings/${g.id}`),
   };
 }

@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   if (!g) return {};
   const team = getTeam(g.teamId);
   const title = (g.title ?? `${team?.name ?? ""} ${g.category}`).trim();
-  const description = `${g.date} · ${g.venue.name}${team ? ` · ${team.name}` : ""}`;
+  const description = `${g.date} · ${g.venue?.name ?? "장소 추후 공지"}${team ? ` · ${team.name}` : ""}`;
   return { title, description, openGraph: { title, description, url: absoluteUrl(`/gatherings/${id}`) } };
 }
 
@@ -66,7 +66,7 @@ export default async function GatheringPage({ params }: { params: Promise<{ id: 
   const dateLabel =
     `${year}.${String(month).padStart(2, "0")}.${String(day).padStart(2, "0")} (${wd})` +
     (g.startTime ? ` · ${g.startTime}${g.endTime ? ` – ${g.endTime}` : ""}` : "");
-  const deadlineLabel = g.registration.deadline ? g.registration.deadline.slice(5).replace("-", ".") : null;
+  const deadlineLabel = g.registration?.deadline ? g.registration.deadline.slice(5).replace("-", ".") : null;
 
   return (
     <article>
@@ -108,27 +108,35 @@ export default async function GatheringPage({ params }: { params: Promise<{ id: 
             {dateLabel}
           </InfoRow>
           <InfoRow icon={MapPin} label="장소">
-            {g.venue.name}
-            {g.venue.address && <div className="text-ink-mute">{g.venue.address}</div>}
-            {g.venue.mapUrl && (
-              <a
-                href={g.venue.mapUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-1 inline-flex items-center gap-1 text-brand-600"
-              >
-                지도에서 보기
-                <ExternalLink className="size-3" aria-hidden />
-              </a>
+            {g.venue ? (
+              <>
+                {g.venue.name}
+                {g.venue.address && <div className="text-ink-mute">{g.venue.address}</div>}
+                {g.venue.mapUrl && (
+                  <a
+                    href={g.venue.mapUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-1 inline-flex items-center gap-1 text-brand-600"
+                  >
+                    지도에서 보기
+                    <ExternalLink className="size-3" aria-hidden />
+                  </a>
+                )}
+              </>
+            ) : (
+              "추후 공지"
             )}
           </InfoRow>
           <InfoRow icon={Ticket} label="입장">
-            {g.isFree ? "무료" : `₩${(g.price ?? 0).toLocaleString("ko-KR")}`}
+            {g.isFree === undefined ? "추후 공지" : g.isFree ? "무료" : `₩${(g.price ?? 0).toLocaleString("ko-KR")}`}
           </InfoRow>
           <InfoRow icon={Pencil} label="사전등록">
-            {g.registration.required
-              ? `사전등록 필요${deadlineLabel ? ` · 마감 ${deadlineLabel}` : ""}`
-              : "현장 참석 (등록 불필요)"}
+            {!g.registration
+              ? "추후 공지"
+              : g.registration.required
+                ? `사전등록 필요${deadlineLabel ? ` · 마감 ${deadlineLabel}` : ""}`
+                : "현장 참석 (등록 불필요)"}
           </InfoRow>
           {g.guests && g.guests.length > 0 && (
             <InfoRow icon={Mic} label="게스트">

@@ -6,7 +6,7 @@ export type Region =
   | "온라인";
 
 export type GatheringCategory =
-  | "정기예배" | "연합예배" | "거리예배" | "수련회" | "기도모임" | "절기예배";
+  | "정기예배" | "찬양집회" | "연합예배" | "거리예배" | "수련회" | "기도모임" | "절기예배";
 
 // 저장하지 않고 date·deadline·오늘(KST)로 파생 (lib/gathering-status)
 export type GatheringStatus = "예정" | "오늘" | "등록마감" | "종료";
@@ -53,10 +53,10 @@ export interface Gathering {
   date: string; // "YYYY-MM-DD" (KST 기준)
   startTime?: string; // "HH:mm"
   endTime?: string;
-  venue: Venue;
-  isFree: boolean;
+  venue?: Venue; // 미정(예: SAVE THE DATE 티저)이면 생략
+  isFree?: boolean; // 미정이면 생략
   price?: number; // 원(KRW)
-  registration: Registration;
+  registration?: Registration; // 미정이면 생략
   guests?: string[];
   isOnline?: boolean; // 온라인 송출 있음 (하이브리드 포함). 순수 온라인은 venue.region="온라인"
   liveUrl?: string;

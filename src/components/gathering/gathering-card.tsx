@@ -8,6 +8,7 @@ import { CategoryTag } from "./category-tag";
 const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"] as const;
 
 function priceLabel(g: Gathering): string {
+  if (g.isFree === undefined) return "미정";
   return g.isFree ? "무료" : `₩${(g.price ?? 0).toLocaleString("ko-KR")}`;
 }
 
@@ -62,7 +63,7 @@ export function GatheringCard({ g, team, status }: { g: Gathering; team: Team; s
           )}
           <span className="inline-flex min-w-0 items-center gap-1">
             <MapPin className="size-3.5 shrink-0" aria-hidden />
-            <span className="truncate">{g.venue.name}</span>
+            <span className="truncate">{g.venue?.name ?? "장소 추후 공지"}</span>
           </span>
         </div>
       </div>

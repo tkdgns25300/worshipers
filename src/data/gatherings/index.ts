@@ -8,5 +8,6 @@ import { gatherings as i6tyone } from "./i6tyone";
 import { gatherings as feast } from "./feast";
 import { gatherings as fia } from "./fia";
 import { gatherings as yeram } from "./yeram";
+import { gatherings as teamluke } from "./teamluke";
 
-export const GATHERINGS: Gathering[] = [...markers, ...jus, ...anointing, ...welove, ...ywam, ...i6tyone, ...feast, ...fia, ...yeram];
+export const GATHERINGS: Gathering[] = [...markers, ...jus, ...anointing, ...welove, ...ywam, ...i6tyone, ...feast, ...fia, ...yeram, ...teamluke];

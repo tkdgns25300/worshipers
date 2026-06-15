@@ -8,5 +8,6 @@ import { team as i6tyone } from "./i6tyone";
 import { team as feast } from "./feast";
 import { team as fia } from "./fia";
 import { team as yeram } from "./yeram";
+import { team as teamluke } from "./teamluke";
 
-export const TEAMS: Team[] = [markers, jus, anointing, welove, ywam, i6tyone, feast, fia, yeram];
+export const TEAMS: Team[] = [markers, jus, anointing, welove, ywam, i6tyone, feast, fia, yeram, teamluke];

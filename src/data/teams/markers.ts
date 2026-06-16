@@ -15,4 +15,5 @@ export const team: Team = {
     instagram: "https://www.instagram.com/markersworship",
     homepage: "https://markersworship.com",
   },
+  imageUrl: "/images/teams/markers.png",
 };

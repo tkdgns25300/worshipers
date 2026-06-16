@@ -15,4 +15,5 @@ export const team: Team = {
     facebook: "https://www.facebook.com/page.J.US",
     homepage: "https://www.jusworship.com",
   },
+  imageUrl: "/images/teams/j-us.png",
 };

@@ -7,6 +7,7 @@ import { TEAMS } from "@/data/teams";
 import { getTeam, getTeamGatherings } from "@/lib/queries";
 import { teamJsonLd, absoluteUrl } from "@/lib/seo";
 import { TeamGatherings } from "@/components/team/team-gatherings";
+import { TeamAvatar } from "@/components/team/team-avatar";
 
 export const dynamicParams = false;
 
@@ -48,9 +49,12 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
             둘러보기
           </Link>
           <div className="flex items-center gap-3">
-            <span className="grid size-14 shrink-0 place-items-center rounded-2xl bg-white/20 text-xl font-bold">
-              {team.name.slice(0, 1)}
-            </span>
+            <TeamAvatar
+              team={team}
+              className="size-14 shrink-0 rounded-2xl"
+              fallbackClassName="bg-white/20 text-xl"
+              sizes="56px"
+            />
             <div>
               <h1 className="text-2xl font-bold">{team.name}</h1>
               <div className="text-sm opacity-80">

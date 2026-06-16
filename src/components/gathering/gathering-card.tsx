@@ -4,6 +4,7 @@ import type { Gathering, GatheringStatus, Team } from "@/types/domain";
 import { cn } from "@/lib/utils";
 import { StatusBadge } from "./status-badge";
 import { CategoryTag } from "./category-tag";
+import { TeamAvatar } from "@/components/team/team-avatar";
 
 const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"] as const;
 
@@ -53,9 +54,12 @@ export function GatheringCard({ g, team, status }: { g: Gathering; team: Team; s
         <h3 className="truncate font-semibold text-ink">{g.title}</h3>
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-ink-mute">
           <span className="inline-flex items-center gap-1">
-            <span className="inline-flex size-4 items-center justify-center rounded-full bg-brand-100 text-[9px] font-bold text-brand-700">
-              {team.name.slice(0, 1)}
-            </span>
+            <TeamAvatar
+              team={team}
+              className="size-4 rounded-full"
+              fallbackClassName="bg-brand-100 text-[9px] text-brand-700"
+              sizes="16px"
+            />
             {team.name}
           </span>
           {rangeLabel && (

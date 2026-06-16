@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Search, Calendar, MapPin } from "lucide-react";
 import type { Team } from "@/types/domain";
 import { EmptyState } from "@/components/gathering/empty-state";
+import { TeamAvatar } from "@/components/team/team-avatar";
 
 export function TeamsView({ teams }: { teams: Team[] }) {
   const [q, setQ] = useState("");
@@ -39,9 +40,12 @@ export function TeamsView({ teams }: { teams: Team[] }) {
               className="group flex flex-col gap-3 rounded-2xl border border-border bg-surface p-5 transition hover:border-brand-200 hover:shadow-md"
             >
               <div className="flex items-center gap-3">
-                <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-brand-400 to-brand-700 text-lg font-bold text-white">
-                  {t.name.slice(0, 1)}
-                </span>
+                <TeamAvatar
+                  team={t}
+                  className="size-12 shrink-0 rounded-2xl"
+                  fallbackClassName="bg-gradient-to-br from-brand-400 to-brand-700 text-lg text-white"
+                  sizes="48px"
+                />
                 <div className="min-w-0">
                   <div className="truncate font-semibold text-ink">{t.name}</div>
                   {(t.nameEn || t.denomination) && (

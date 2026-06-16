@@ -13,4 +13,5 @@ export const team: Team = {
     instagram: "https://www.instagram.com/yeramworship",
     facebook: "https://www.facebook.com/yeram.yc",
   },
+  imageUrl: "/images/teams/yeram.png",
 };

@@ -14,4 +14,5 @@ export const team: Team = {
     facebook: "https://www.facebook.com/i6tyone",
     homepage: "https://www.i6tyone.com",
   },
+  imageUrl: "/images/teams/i6tyone.png",
 };

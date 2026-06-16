@@ -15,4 +15,5 @@ export const team: Team = {
     blog: "https://blog.naver.com/anointingm",
     homepage: "https://anointingmusic.com",
   },
+  imageUrl: "/images/teams/anointing.png",
 };

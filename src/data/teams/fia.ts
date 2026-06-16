@@ -13,4 +13,5 @@ export const team: Team = {
     instagram: "https://www.instagram.com/fia_worship",
     blog: "https://blog.naver.com/faithinaction210",
   },
+  imageUrl: "/images/teams/fia.png",
 };

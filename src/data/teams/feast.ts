@@ -11,4 +11,5 @@ export const team: Team = {
     youtube: "https://www.youtube.com/@feast_family",
     instagram: "https://www.instagram.com/feast_family_",
   },
+  imageUrl: "/images/teams/feast.png",
 };

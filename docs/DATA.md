@@ -37,7 +37,7 @@ export interface Team {
     homepage?: string
     kakao?: string
   }
-  imageUrl?: string          // /images/teams/{id}.* — 직접 제작·허가분만
+  imageUrl?: string          // /images/teams/{id}.png — 팀 로고(정사각 아바타 또는 투명 워드마크). 팀별 허가분만(재호스팅 금지). 없으면 글자 아바타 fallback
 }
 
 export interface Gathering {

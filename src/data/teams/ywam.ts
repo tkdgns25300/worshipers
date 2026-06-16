@@ -14,4 +14,5 @@ export const team: Team = {
     facebook: "https://www.facebook.com/ywamworshipkorea",
     homepage: "https://www.ywamkorea.org",
   },
+  imageUrl: "/images/teams/ywam.png",
 };

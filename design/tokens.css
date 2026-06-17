@@ -83,6 +83,21 @@
   --border:#f1e2e9; --border-soft:#f8edf2; --on-brand:#ffffff;
 }
 
+/* =================== PALETTE D — "Dawn" (current default) ===================
+ * warm amber on near-white · single warm accent · airy */
+[data-palette="dawn"] {
+  --brand-50:#fef6ee; --brand-100:#fdeadb; --brand-200:#f8d3b3;
+  --brand-400:#f0a06e; --brand-500:#ec894a; --brand-600:#e07b34;
+  --brand-700:#c2701f; --brand-ink:#5c3a18;
+  --accent-50:#fff5e6; --accent-200:#fcdfa6; --accent-500:#f1a417;
+  --accent-600:#d9870a; --accent-700:#a9670a;
+}
+[data-palette="dawn"][data-theme="light"] {
+  --bg:#fcfaf6; --surface:#ffffff; --surface-2:#f4efe7;
+  --ink:#20242b; --ink-soft:#555c66; --ink-mute:#8b919c;
+  --border:#ece6db; --border-soft:#f5f0e8; --on-brand:#ffffff;
+}
+
 /* =================== DARK THEME ─ shared remaps + per-palette brand lift =================== */
 [data-theme="dark"] {
   --ink:#f3f1fb; --ink-soft:#b8b3cc; --ink-mute:#837e98;
@@ -106,6 +121,11 @@
   --bg:#1a0f17; --surface:#241621; --surface-2:#2e1c29;
   --border:#3d2737; --border-soft:#33212f;
   --brand-600:#d660b3; --brand-700:#c14f9e; --brand-50:#2e1c29; --brand-100:#381f31; --brand-200:#4d2c43;
+}
+[data-palette="dawn"][data-theme="dark"] {
+  --bg:#17140f; --surface:#221d16; --surface-2:#2b251c;
+  --border:#39301f; --border-soft:#2f2818;
+  --brand-600:#ef9a52; --brand-700:#e0863a; --brand-50:#2b251c; --brand-100:#332a1d; --brand-200:#4a3a23;
 }
 
 /* =================== STATUS TOKENS ─ color + icon + label (never color-only) =================== */

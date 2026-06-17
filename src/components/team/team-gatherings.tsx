@@ -20,7 +20,7 @@ export function TeamGatherings({ team, gatherings, teams }: { team: Team; gather
     return <EmptyState Icon={Calendar} title="예정된 모임이 없어요" body="새 모임 공지가 올라오면 여기에 표시됩니다." />;
   }
   return (
-    <div className="space-y-2.5">
+    <div className="grid gap-3 sm:grid-cols-2">
       {upcoming.map((g) => (
         <GatheringCard key={g.id} g={g} team={teamById.get(g.teamId) ?? team} status={getGatheringStatus(g, today)} />
       ))}

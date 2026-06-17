@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { SITE } from "@/constants/site";
 
 // 공유 미리보기(카톡·SNS) 대표 이미지. 한국어 맥락은 og:title/description(메타)가 전달하고,
 // 이미지엔 폰트 의존 없는 라틴 브랜드만 둬서 렌더를 안정화한다.
@@ -17,7 +18,7 @@ export default function OpengraphImage() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          background: "#4b40d4",
+          background: SITE.brandColor,
           color: "#ffffff",
         }}
       >

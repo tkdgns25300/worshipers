@@ -161,10 +161,10 @@ export function HomeView({ gatherings, teams }: { gatherings: Gathering[]; teams
 
   return (
     <div className="mx-auto max-w-5xl px-4 pb-10">
-      <section className="mt-4 overflow-hidden rounded-3xl bg-brand-600 px-6 py-10 text-on-brand md:px-10 md:py-14">
-        <h1 className="text-2xl font-bold md:text-4xl">이번 주, 함께 드릴 예배를 찾다</h1>
-        <p className="mt-2 text-sm opacity-80 md:text-base">전국의 워십 모임과 예배팀을 한 곳에서.</p>
-        <label className="mt-6 flex items-center gap-2 rounded-2xl bg-surface px-4 py-3 shadow-md">
+      <section className="mt-6">
+        <h1 className="text-2xl font-bold text-ink md:text-4xl">이번 주, 함께 드릴 예배를 찾다</h1>
+        <p className="mt-2 text-sm text-ink-mute md:text-base">전국의 워십 모임과 예배팀을 한 곳에서.</p>
+        <label className="mt-5 flex items-center gap-2 rounded-2xl border border-border bg-surface px-4 py-3 shadow-sm">
           <Search className="size-5 shrink-0 text-ink-mute" aria-hidden />
           <input
             value={query}
@@ -225,7 +225,7 @@ export function HomeView({ gatherings, teams }: { gatherings: Gathering[]; teams
                     {b.label}
                     <span className="text-sm font-medium text-ink-mute">{b.items.length}</span>
                   </h2>
-                  <div className="space-y-2.5">{b.items.map(renderCard)}</div>
+                  <div className="grid gap-3 sm:grid-cols-2">{b.items.map(renderCard)}</div>
                 </section>
               ),
           )}
@@ -249,7 +249,7 @@ export function HomeView({ gatherings, teams }: { gatherings: Gathering[]; teams
             </span>
             <ChevronDown className={cn("size-4 transition", showPast && "rotate-180")} aria-hidden />
           </button>
-          {showPast && <div className="mt-3 space-y-2.5">{past.map(renderCard)}</div>}
+          {showPast && <div className="mt-3 grid gap-3 sm:grid-cols-2">{past.map(renderCard)}</div>}
         </div>
       )}
 

@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { SITE } from "@/constants/site";
 
 // 브랜드 favicon — 인디고 라운드 + 흰 불꽃 (워드마크 글리프).
 // 작은 탭 크기(16px)에서도 또렷하도록 outline이 아닌 solid fill 불꽃 사용.
@@ -15,7 +16,7 @@ export default function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#4b40d4",
+          background: SITE.brandColor,
           borderRadius: 8,
         }}
       >

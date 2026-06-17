@@ -42,12 +42,10 @@ export function GatheringCard({ g, team, status }: { g: Gathering; team: Team; s
         <div className="w-16 shrink-0 overflow-hidden rounded-xl border border-border bg-surface shadow-[0_2px_0_rgba(0,0,0,0.05)]">
           <div
             className={cn(
-              "relative py-1 text-center text-[11px] font-bold",
+              "py-1 text-center text-[11px] font-bold",
               isToday ? "bg-[var(--st-today-bg)] text-[var(--st-today-fg)]" : "bg-brand-600 text-on-brand",
             )}
           >
-            <span className="absolute left-4 top-0.5 h-1.5 w-0.5 rounded-full bg-current opacity-50" aria-hidden />
-            <span className="absolute right-4 top-0.5 h-1.5 w-0.5 rounded-full bg-current opacity-50" aria-hidden />
             {month}월
           </div>
           <div className="pt-1.5 text-center text-3xl font-extrabold leading-none text-ink">{day}</div>

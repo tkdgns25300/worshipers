@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Search, X, SlidersHorizontal, ChevronDown, Sparkles, type LucideIcon } from "lucide-react";
+import { Search, X, SlidersHorizontal, ChevronDown, Check, Sparkles, type LucideIcon } from "lucide-react";
 import type { Gathering, Team } from "@/types/domain";
 import { GATHERING_CATEGORIES } from "@/constants/categories";
 import { REGIONS } from "@/constants/regions";
@@ -32,7 +32,7 @@ export function HomeView({ gatherings, teams }: { gatherings: Gathering[]; teams
     [gatherings],
   );
 
-  // 필터는 URL 파라미터 = 상태 (뒤로가기 복원). 검색은 입력 반응성 위해 로컬.
+  // 필터는 URL 파라미터 = 상태 (뒤로가기 복원). 검색·팀검색은 입력 반응성 위해 로컬.
   const cat = sp.get("cat") ?? "all";
   const region = sp.get("region") ?? "";
   const periodRaw = sp.get("period");
@@ -40,7 +40,8 @@ export function HomeView({ gatherings, teams }: { gatherings: Gathering[]; teams
   const free = sp.get("free") === "1";
   const teamSel = sp.get("teams")?.split(",").filter(Boolean) ?? [];
   const [query, setQuery] = useState(sp.get("q") ?? "");
-  const [sheetOpen, setSheetOpen] = useState(false);
+  const [teamQuery, setTeamQuery] = useState("");
+  const [filterOpen, setFilterOpen] = useState(false);
   const [showPast, setShowPast] = useState(false);
 
   function setParam(updates: Record<string, string | null>) {
@@ -58,6 +59,7 @@ export function HomeView({ gatherings, teams }: { gatherings: Gathering[]; teams
   }
   function resetAll() {
     setQuery("");
+    setTeamQuery("");
     router.replace("/", { scroll: false });
   }
 
@@ -90,72 +92,120 @@ export function HomeView({ gatherings, teams }: { gatherings: Gathering[]; teams
   );
   const past = matched.filter((g) => gatheringEndDate(g) < today).sort((a, b) => b.date.localeCompare(a.date));
   const total = buckets.reduce((n, b) => n + b.items.length, 0);
-  const activeFilters =
-    (cat !== "all" ? 1 : 0) + (teamSel.length ? 1 : 0) + (region ? 1 : 0) + (period !== "all" ? 1 : 0) + (free ? 1 : 0);
+
+  // 「필터」 버튼이 다루는 항목(카테고리 제외 — 카테고리는 상단 칩). 선택값은 제거 가능한 칩으로 표시.
+  const appliedChips = [
+    ...teamSel.map((id) => ({ key: `team-${id}`, label: teamById.get(id)?.name ?? id, onRemove: () => toggleTeam(id) })),
+    ...(region ? [{ key: "region", label: region, onRemove: () => setParam({ region: null }) }] : []),
+    ...(period !== "all"
+      ? [{ key: "period", label: period === "week" ? "이번 주" : "이번 달", onRemove: () => setParam({ period: null }) }]
+      : []),
+    ...(free ? [{ key: "free", label: "무료만", onRemove: () => setParam({ free: null }) }] : []),
+  ];
+  const hasActive = cat !== "all" || appliedChips.length > 0 || Boolean(query);
 
   const renderCard = (g: Gathering) => {
     const team = teamById.get(g.teamId);
     return team ? <GatheringCard key={g.id} g={g} team={team} status={getGatheringStatus(g, today)} /> : null;
   };
 
-  const filterControls = (stacked?: boolean) => (
-    <div className={cn("flex gap-2", stacked ? "flex-col items-stretch" : "flex-wrap items-center")}>
-      <div className="flex flex-wrap gap-1.5">
-        {teams.map((t) => {
-          const on = teamSel.includes(t.id);
-          return (
+  const shownTeams = teamQuery.trim()
+    ? teams.filter((t) => [t.name, t.nameEn].some((s) => s?.toLowerCase().includes(teamQuery.trim().toLowerCase())))
+    : teams;
+
+  // 팀 검색 + 체크박스 · 지역 · 기간 · 무료. 데스크톱 팝오버·모바일 바텀시트에서 공유.
+  const filterPanel = (
+    <div className="space-y-4">
+      <div>
+        <h3 className="mb-2 text-xs font-semibold text-ink-mute">예배팀</h3>
+        <label className="mb-2 flex items-center gap-2 rounded-lg border border-border bg-surface px-3 py-2 text-sm">
+          <Search className="size-4 shrink-0 text-ink-mute" aria-hidden />
+          <input
+            value={teamQuery}
+            onChange={(e) => setTeamQuery(e.target.value)}
+            placeholder="팀 검색"
+            aria-label="팀 검색"
+            className="w-full bg-transparent text-ink outline-none placeholder:text-ink-mute"
+          />
+        </label>
+        <div className="grid max-h-52 grid-cols-2 gap-x-3 gap-y-0.5 overflow-y-auto">
+          {shownTeams.map((t) => {
+            const on = teamSel.includes(t.id);
+            return (
+              <button
+                key={t.id}
+                type="button"
+                role="checkbox"
+                aria-checked={on}
+                onClick={() => toggleTeam(t.id)}
+                className="flex items-center gap-2 rounded py-1 text-left text-sm text-ink"
+              >
+                <span
+                  className={cn(
+                    "grid size-[18px] shrink-0 place-items-center rounded border transition",
+                    on ? "border-brand-600 bg-brand-600 text-on-brand" : "border-border",
+                  )}
+                >
+                  {on && <Check className="size-3" strokeWidth={3} aria-hidden />}
+                </span>
+                <span className="truncate">{t.name}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <div>
+        <h3 className="mb-2 text-xs font-semibold text-ink-mute">지역</h3>
+        <select
+          value={region}
+          onChange={(e) => setParam({ region: e.target.value || null })}
+          aria-label="지역"
+          className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-ink"
+        >
+          <option value="">지역 전체</option>
+          {REGIONS.map((r) => (
+            <option key={r} value={r}>
+              {r}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <h3 className="mb-2 text-xs font-semibold text-ink-mute">기간</h3>
+        <div className="inline-flex rounded-full border border-border bg-surface p-0.5">
+          {PERIODS.map((p) => (
             <button
-              key={t.id}
-              onClick={() => toggleTeam(t.id)}
-              aria-pressed={on}
+              key={p.id}
+              type="button"
+              onClick={() => setParam({ period: p.id === "all" ? null : p.id })}
               className={cn(
-                "rounded-full border px-3 py-1.5 text-sm transition",
-                on ? "border-brand-600 bg-brand-50 text-brand-700" : "border-border bg-surface text-ink-soft hover:text-ink",
+                "rounded-full px-3 py-1 text-sm transition",
+                period === p.id ? "bg-brand-600 text-on-brand" : "text-ink-soft hover:text-ink",
               )}
             >
-              {t.name}
+              {p.label}
             </button>
-          );
-        })}
+          ))}
+        </div>
       </div>
-      <select
-        value={region}
-        onChange={(e) => setParam({ region: e.target.value || null })}
-        aria-label="지역"
-        className="rounded-full border border-border bg-surface px-3 py-1.5 text-sm text-ink"
-      >
-        <option value="">지역 전체</option>
-        {REGIONS.map((r) => (
-          <option key={r} value={r}>
-            {r}
-          </option>
-        ))}
-      </select>
-      <div className="inline-flex rounded-full border border-border bg-surface p-0.5">
-        {PERIODS.map((p) => (
-          <button
-            key={p.id}
-            onClick={() => setParam({ period: p.id === "all" ? null : p.id })}
-            className={cn(
-              "rounded-full px-3 py-1 text-sm transition",
-              period === p.id ? "bg-brand-600 text-on-brand" : "text-ink-soft hover:text-ink",
-            )}
-          >
-            {p.label}
-          </button>
-        ))}
+
+      <div>
+        <h3 className="mb-2 text-xs font-semibold text-ink-mute">입장</h3>
+        <button
+          type="button"
+          role="switch"
+          aria-checked={free}
+          onClick={() => setParam({ free: free ? null : "1" })}
+          className={cn(
+            "rounded-full border px-3 py-1.5 text-sm transition",
+            free ? "border-brand-600 bg-brand-50 text-brand-700" : "border-border bg-surface text-ink-soft hover:text-ink",
+          )}
+        >
+          무료만
+        </button>
       </div>
-      <button
-        role="switch"
-        aria-checked={free}
-        onClick={() => setParam({ free: free ? null : "1" })}
-        className={cn(
-          "rounded-full border px-3 py-1.5 text-sm transition",
-          free ? "border-brand-600 bg-brand-50 text-brand-700" : "border-border bg-surface text-ink-soft hover:text-ink",
-        )}
-      >
-        무료만
-      </button>
     </div>
   );
 
@@ -181,6 +231,7 @@ export function HomeView({ gatherings, teams }: { gatherings: Gathering[]; teams
         </label>
       </section>
 
+      {/* 카테고리 칩 — 한 줄 가로 스크롤 (종류 늘어도 한 줄 유지) */}
       <div className="mt-6 flex gap-2 overflow-x-auto pb-1">
         <CatChip active={cat === "all"} onClick={() => setParam({ cat: null })} Icon={Sparkles} label="전체" />
         {presentCategories.map((c) => (
@@ -188,25 +239,64 @@ export function HomeView({ gatherings, teams }: { gatherings: Gathering[]; teams
         ))}
       </div>
 
-      <div className="mt-3 hidden md:block">{filterControls()}</div>
-      <div className="mt-3 flex items-center gap-2 md:hidden">
-        <button
-          onClick={() => setSheetOpen(true)}
-          className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-3 py-1.5 text-sm font-medium text-ink"
-        >
-          <SlidersHorizontal className="size-4" aria-hidden />
-          필터
-          {activeFilters > 0 && (
-            <span className="rounded-full bg-brand-600 px-1.5 text-xs text-on-brand">{activeFilters}</span>
-          )}
-        </button>
-        <span className="text-sm text-ink-mute">{total}개 모임</span>
-        {(activeFilters > 0 || query) && (
-          <button onClick={resetAll} className="ml-auto text-sm font-medium text-brand-600">
-            초기화
+      {/* 필터 버튼 + (데스크톱) 팝오버 */}
+      <div className="relative mt-3">
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setFilterOpen((o) => !o)}
+            aria-expanded={filterOpen}
+            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-3 py-1.5 text-sm font-medium text-ink"
+          >
+            <SlidersHorizontal className="size-4" aria-hidden />
+            필터
+            {appliedChips.length > 0 && (
+              <span className="rounded-full bg-brand-600 px-1.5 text-xs text-on-brand">{appliedChips.length}</span>
+            )}
           </button>
+          <span className="text-sm text-ink-mute">{total}개 모임</span>
+          {hasActive && (
+            <button onClick={resetAll} className="ml-auto text-sm font-medium text-brand-600">
+              초기화
+            </button>
+          )}
+        </div>
+
+        {filterOpen && (
+          <>
+            <div className="fixed inset-0 z-30 hidden md:block" onClick={() => setFilterOpen(false)} aria-hidden />
+            <div className="absolute left-0 top-full z-40 mt-2 hidden w-[420px] max-w-[calc(100vw-2rem)] rounded-2xl border border-border bg-surface p-4 shadow-lg md:block">
+              {filterPanel}
+              <div className="mt-4 flex gap-2">
+                <button onClick={resetAll} className="flex-1 rounded-full border border-border py-2 text-sm font-medium text-ink">
+                  초기화
+                </button>
+                <button
+                  onClick={() => setFilterOpen(false)}
+                  className="flex-1 rounded-full bg-brand-600 py-2 text-sm font-semibold text-on-brand"
+                >
+                  {total}개 모임 보기
+                </button>
+              </div>
+            </div>
+          </>
         )}
       </div>
+
+      {/* 선택된 필터 칩 (제거 가능) */}
+      {appliedChips.length > 0 && (
+        <div className="mt-2 flex flex-wrap gap-1.5">
+          {appliedChips.map((c) => (
+            <button
+              key={c.key}
+              onClick={c.onRemove}
+              className="inline-flex items-center gap-1 rounded-full border border-brand-200 bg-brand-50 px-2.5 py-1 text-xs font-medium text-brand-700"
+            >
+              {c.label}
+              <X className="size-3" aria-hidden />
+            </button>
+          ))}
+        </div>
+      )}
 
       {total === 0 ? (
         <EmptyState
@@ -253,23 +343,24 @@ export function HomeView({ gatherings, teams }: { gatherings: Gathering[]; teams
         </div>
       )}
 
-      {sheetOpen && (
+      {/* 모바일 바텀시트 */}
+      {filterOpen && (
         <div className="fixed inset-0 z-50 md:hidden" role="dialog" aria-modal="true" aria-label="필터">
-          <div className="absolute inset-0 bg-black/40" onClick={() => setSheetOpen(false)} />
-          <div className="absolute inset-x-0 bottom-0 rounded-t-3xl bg-surface p-4">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setFilterOpen(false)} />
+          <div className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-3xl bg-surface p-4">
             <div className="mb-3 flex items-center justify-between">
               <h2 className="font-bold text-ink">필터</h2>
-              <button onClick={() => setSheetOpen(false)} aria-label="닫기" className="text-ink-mute">
+              <button onClick={() => setFilterOpen(false)} aria-label="닫기" className="text-ink-mute">
                 <X className="size-5" />
               </button>
             </div>
-            {filterControls(true)}
+            {filterPanel}
             <div className="mt-4 flex gap-2">
               <button onClick={resetAll} className="flex-1 rounded-full border border-border py-2.5 text-sm font-medium text-ink">
                 초기화
               </button>
               <button
-                onClick={() => setSheetOpen(false)}
+                onClick={() => setFilterOpen(false)}
                 className="flex-1 rounded-full bg-brand-600 py-2.5 text-sm font-semibold text-on-brand"
               >
                 {total}개 모임 보기

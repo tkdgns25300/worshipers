@@ -7,9 +7,9 @@ import type { Gathering, Team } from "@/types/domain";
 import { GATHERING_CATEGORIES } from "@/constants/categories";
 import { REGIONS } from "@/constants/regions";
 import { todayKst, daysUntil, getGatheringStatus, gatheringEndDate } from "@/lib/gathering-status";
-import { groupUpcoming } from "@/lib/queries";
+import { groupAgendaWeeks, type AgendaWeek } from "@/lib/queries";
 import { cn } from "@/lib/utils";
-import { GatheringCard } from "@/components/gathering/gathering-card";
+import { AgendaCard } from "@/components/gathering/agenda-card";
 import { CATEGORY_ICON } from "@/components/gathering/category-tag";
 import { EmptyState } from "@/components/gathering/empty-state";
 import { AdSlot } from "@/components/ads/ad-slot";
@@ -20,6 +20,8 @@ const PERIODS = [
   { id: "month", label: "이번 달" },
 ] as const;
 type Period = (typeof PERIODS)[number]["id"];
+
+const fmtShort = (iso: string) => `${Number(iso.slice(5, 7))}/${Number(iso.slice(8, 10))}`;
 
 export function HomeView({ gatherings, teams }: { gatherings: Gathering[]; teams: Team[] }) {
   const sp = useSearchParams();
@@ -38,6 +40,8 @@ export function HomeView({ gatherings, teams }: { gatherings: Gathering[]; teams
   const periodRaw = sp.get("period");
   const period: Period = periodRaw === "week" || periodRaw === "month" ? periodRaw : "all";
   const free = sp.get("free") === "1";
+  const from = sp.get("from") ?? "";
+  const to = sp.get("to") ?? "";
   const teamSel = sp.get("teams")?.split(",").filter(Boolean) ?? [];
   const [query, setQuery] = useState(sp.get("q") ?? "");
   const [teamQuery, setTeamQuery] = useState("");
@@ -71,6 +75,8 @@ export function HomeView({ gatherings, teams }: { gatherings: Gathering[]; teams
       if (region === "온라인" ? !g.isOnline : g.venue?.region !== region) return false;
     }
     if (free && !g.isFree) return false;
+    if (from && gatheringEndDate(g) < from) return false;
+    if (to && g.date > to) return false;
     if (!q) return true;
     const t = teamById.get(g.teamId);
     const guestTeamNames = (g.guestTeamIds ?? []).map((id) => teamById.get(id)?.name);
@@ -86,19 +92,23 @@ export function HomeView({ gatherings, teams }: { gatherings: Gathering[]; teams
   };
 
   const matched = gatherings.filter(matches);
-  const buckets = groupUpcoming(
-    matched.filter((g) => gatheringEndDate(g) >= today && inPeriod(g)),
-    today,
-  );
-  const past = matched.filter((g) => gatheringEndDate(g) < today).sort((a, b) => b.date.localeCompare(a.date));
-  const total = buckets.reduce((n, b) => n + b.items.length, 0);
+  const upcoming = matched.filter((g) => gatheringEndDate(g) >= today && inPeriod(g));
+  const pastList = matched.filter((g) => gatheringEndDate(g) < today);
+  const weeks = groupAgendaWeeks(upcoming, today);
+  const pastWeeks = groupAgendaWeeks(pastList, today)
+    .reverse()
+    .map((w) => ({ ...w, days: [...w.days].reverse() }));
+  const total = upcoming.length;
 
-  // 「필터」 버튼이 다루는 항목(카테고리 제외 — 카테고리는 상단 칩). 선택값은 제거 가능한 칩으로 표시.
+  // 「필터」 버튼이 다루는 항목(카테고리 제외 — 카테고리는 상단 칩). 선택값은 제거 가능한 칩으로.
   const appliedChips = [
     ...teamSel.map((id) => ({ key: `team-${id}`, label: teamById.get(id)?.name ?? id, onRemove: () => toggleTeam(id) })),
     ...(region ? [{ key: "region", label: region, onRemove: () => setParam({ region: null }) }] : []),
     ...(period !== "all"
       ? [{ key: "period", label: period === "week" ? "이번 주" : "이번 달", onRemove: () => setParam({ period: null }) }]
+      : []),
+    ...(from || to
+      ? [{ key: "range", label: `${from ? fmtShort(from) : "처음"} ~ ${to ? fmtShort(to) : "끝"}`, onRemove: () => setParam({ from: null, to: null }) }]
       : []),
     ...(free ? [{ key: "free", label: "무료만", onRemove: () => setParam({ free: null }) }] : []),
   ];
@@ -106,14 +116,35 @@ export function HomeView({ gatherings, teams }: { gatherings: Gathering[]; teams
 
   const renderCard = (g: Gathering) => {
     const team = teamById.get(g.teamId);
-    return team ? <GatheringCard key={g.id} g={g} team={team} status={getGatheringStatus(g, today)} /> : null;
+    return team ? <AgendaCard key={g.id} g={g} team={team} status={getGatheringStatus(g, today)} today={today} /> : null;
   };
 
-  const shownTeams = teamQuery.trim()
-    ? teams.filter((t) => [t.name, t.nameEn].some((s) => s?.toLowerCase().includes(teamQuery.trim().toLowerCase())))
-    : teams;
+  const renderTimeline = (list: AgendaWeek[]) =>
+    list.map((wk) => (
+      <section key={wk.key}>
+        <div className="mb-3 flex items-center gap-2.5">
+          <span className="rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-xs font-bold text-brand-700">
+            {wk.label}
+          </span>
+          <span className="text-xs text-ink-mute">{wk.range}</span>
+          <span className="h-px flex-1 bg-border" aria-hidden />
+        </div>
+        <div className="space-y-3">
+          {wk.days.map((day, di) => (
+            <div key={day.date} className="flex gap-3 sm:gap-4">
+              <div className="flex w-10 shrink-0 flex-col items-center">
+                <div className="text-xl font-extrabold leading-none text-ink">{Number(day.date.slice(8, 10))}</div>
+                <div className="mt-1 text-[11px] text-ink-mute">{day.weekday}</div>
+                <span className="mt-2 size-2 rounded-full bg-brand-600" aria-hidden />
+                {di < wk.days.length - 1 && <span className="mt-1 w-px flex-1 bg-border" aria-hidden />}
+              </div>
+              <div className="min-w-0 flex-1 space-y-3 pb-1">{day.items.map(renderCard)}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+    ));
 
-  // 팀 검색 + 체크박스 · 지역 · 기간 · 무료. 데스크톱 팝오버·모바일 바텀시트에서 공유.
   const filterPanel = (
     <div className="space-y-4">
       <div>
@@ -129,7 +160,10 @@ export function HomeView({ gatherings, teams }: { gatherings: Gathering[]; teams
           />
         </label>
         <div className="grid max-h-52 grid-cols-2 gap-x-3 gap-y-0.5 overflow-y-auto">
-          {shownTeams.map((t) => {
+          {(teamQuery.trim()
+            ? teams.filter((t) => [t.name, t.nameEn].some((s) => s?.toLowerCase().includes(teamQuery.trim().toLowerCase())))
+            : teams
+          ).map((t) => {
             const on = teamSel.includes(t.id);
             return (
               <button
@@ -188,6 +222,25 @@ export function HomeView({ gatherings, teams }: { gatherings: Gathering[]; teams
               {p.label}
             </button>
           ))}
+        </div>
+        <div className="mt-2.5 flex items-center gap-2">
+          <input
+            type="date"
+            value={from}
+            max={to || undefined}
+            onChange={(e) => setParam({ from: e.target.value || null })}
+            aria-label="시작 날짜"
+            className="min-w-0 flex-1 rounded-lg border border-border bg-surface px-2.5 py-1.5 text-sm text-ink"
+          />
+          <span className="text-ink-mute">~</span>
+          <input
+            type="date"
+            value={to}
+            min={from || undefined}
+            onChange={(e) => setParam({ to: e.target.value || null })}
+            aria-label="종료 날짜"
+            className="min-w-0 flex-1 rounded-lg border border-border bg-surface px-2.5 py-1.5 text-sm text-ink"
+          />
         </div>
       </div>
 
@@ -306,40 +359,27 @@ export function HomeView({ gatherings, teams }: { gatherings: Gathering[]; teams
           body={query ? "다른 키워드로 찾아보세요." : "필터를 조정해 보세요."}
         />
       ) : (
-        <div className="mt-6 space-y-6">
-          {buckets.map(
-            (b) =>
-              b.items.length > 0 && (
-                <section key={b.key}>
-                  <h2 className="mb-2 flex items-center gap-2 text-lg font-bold text-ink">
-                    {b.label}
-                    <span className="text-sm font-medium text-ink-mute">{b.items.length}</span>
-                  </h2>
-                  <div className="grid gap-3 sm:grid-cols-2">{b.items.map(renderCard)}</div>
-                </section>
-              ),
-          )}
-        </div>
+        <div className="mt-6 space-y-7">{renderTimeline(weeks)}</div>
       )}
 
       {total > 0 && (
-        <div className="mt-6">
+        <div className="mt-7">
           <AdSlot />
         </div>
       )}
 
-      {past.length > 0 && (
-        <div className="mt-6">
+      {pastList.length > 0 && (
+        <div className="mt-7">
           <button
             onClick={() => setShowPast((s) => !s)}
             className="flex w-full items-center justify-between rounded-2xl border border-border bg-surface px-4 py-3 text-sm font-medium text-ink"
           >
             <span>
-              지난 모임 보기 <b>{past.length}</b>
+              지난 모임 보기 <b>{pastList.length}</b>
             </span>
             <ChevronDown className={cn("size-4 transition", showPast && "rotate-180")} aria-hidden />
           </button>
-          {showPast && <div className="mt-3 grid gap-3 sm:grid-cols-2">{past.map(renderCard)}</div>}
+          {showPast && <div className="mt-4 space-y-7">{renderTimeline(pastWeeks)}</div>}
         </div>
       )}
 

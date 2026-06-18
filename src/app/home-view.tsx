@@ -130,13 +130,11 @@ export function HomeView({ gatherings, teams }: { gatherings: Gathering[]; teams
           <span className="h-px flex-1 bg-border" aria-hidden />
         </div>
         <div className="space-y-3">
-          {wk.days.map((day, di) => (
+          {wk.days.map((day) => (
             <div key={day.date} className="flex gap-3 sm:gap-4">
-              <div className="flex w-10 shrink-0 flex-col items-center">
+              <div className="w-10 shrink-0 pt-1 text-center">
                 <div className="text-xl font-extrabold leading-none text-ink">{Number(day.date.slice(8, 10))}</div>
                 <div className="mt-1 text-[11px] text-ink-mute">{day.weekday}</div>
-                <span className="mt-2 size-2 rounded-full bg-brand-600" aria-hidden />
-                {di < wk.days.length - 1 && <span className="mt-1 w-px flex-1 bg-border" aria-hidden />}
               </div>
               <div className="min-w-0 flex-1 space-y-3 pb-1">{day.items.map(renderCard)}</div>
             </div>

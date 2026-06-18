@@ -4,9 +4,11 @@ import { cn } from "@/lib/utils";
 import { daysUntil } from "@/lib/gathering-status";
 import { TeamAvatar } from "@/components/team/team-avatar";
 
-// 예배권 티켓 카드 — 왼쪽 시간 스텁 + 오른쪽 떼는 스텁(D-day·지역), 양쪽 천공.
-// 본문은 점선 구분선(티켓 접힘)으로 '무엇'과 '어디·입장'을 나눠 여유 있게.
-// 날짜는 타임라인 축이 맡고, 무료·등록은 가격표처럼이 아니라 맨 아래 조용한 한 줄.
+// 예배권 티켓 카드 — 반응형:
+//  · 모바일(<sm): 시간 스텁 + 본문(eyebrow에 D-day, 장소 줄에 지역). 2단.
+//  · 태블릿(sm~lg): + 오른쪽 D-day·지역 떼는 스텁. 3단.
+//  · 데스크톱(lg+): + 본문 오른쪽 팀 블록(로고·팀명·자세히)으로 넓은 폭을 채움.
+// 날짜는 타임라인 축이 맡고, 무료·등록은 가격표처럼이 아니라 조용한 한 줄.
 
 function time12(hhmm?: string): { ampm: string; t: string } | null {
   if (!hhmm) return null;
@@ -49,11 +51,11 @@ export function AgendaCard({
       )}
     >
       {/* 왼쪽 시간 스텁 */}
-      <div className="relative flex w-[92px] shrink-0 flex-col items-center justify-center gap-1 border-r-2 border-dashed border-border py-6">
+      <div className="relative flex w-[74px] shrink-0 flex-col items-center justify-center gap-1 border-r-2 border-dashed border-border py-4 sm:w-[92px] sm:py-6">
         {tm ? (
           <>
             <span className="text-[10px] font-semibold tracking-[0.15em] text-ink-mute">{tm.ampm}</span>
-            <span className="font-serif text-3xl font-extrabold leading-none tabular-nums text-ink">{tm.t}</span>
+            <span className="font-serif text-[26px] font-extrabold leading-none tabular-nums text-ink sm:text-3xl">{tm.t}</span>
           </>
         ) : (
           <span className="text-center text-xs leading-tight text-ink-mute">
@@ -66,29 +68,48 @@ export function AgendaCard({
         <span className={cn(NOTCH, "-right-[7px] -bottom-[7px]")} aria-hidden />
       </div>
 
-      {/* 본문 */}
-      <div className="flex min-w-0 flex-1 flex-col justify-center gap-2 px-5 py-5">
-        <div className="text-[11px] font-bold tracking-[0.04em] text-brand-700">
-          {g.category}
-          {g.isOnline && <span className="font-medium text-ink-mute"> · 온라인</span>}
+      {/* 본문 (lg에서 정보 + 팀 블록 2단) */}
+      <div className="flex min-w-0 flex-1 flex-col px-4 py-4 sm:px-5 sm:py-5 lg:flex-row lg:gap-5">
+        <div className="flex min-w-0 flex-1 flex-col justify-center gap-1.5 sm:gap-2">
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-[11px] font-bold tracking-[0.04em] text-brand-700">
+              {g.category}
+              {g.isOnline && <span className="font-medium text-ink-mute"> · 온라인</span>}
+            </span>
+            <span className="shrink-0 text-[11px] font-bold text-brand-700 sm:hidden">{dday}</span>
+          </div>
+          <h3 className="truncate text-base font-bold text-ink sm:text-[17px]">{g.title ?? `${team.name} ${g.category}`}</h3>
+          <div className="border-t border-dashed border-border lg:hidden" aria-hidden />
+          {/* 팀+장소 (lg 미만) / 장소만 (lg, 팀은 오른쪽 블록) */}
+          <div className="flex min-w-0 items-center gap-1.5 text-sm lg:hidden">
+            <TeamAvatar
+              team={team}
+              className="size-5 rounded-full"
+              fallbackClassName="bg-brand-100 text-[9px] text-brand-700"
+              sizes="20px"
+            />
+            <span className="min-w-0 truncate text-ink-soft">
+              <span className="font-semibold text-ink">{team.name}</span> · {venueText}
+            </span>
+          </div>
+          <div className="hidden min-w-0 truncate text-sm text-ink-soft lg:block">{venueText}</div>
+          <div className="text-xs text-ink-mute">{admissionLine(g, status)}</div>
         </div>
-        <h3 className="truncate text-[17px] font-bold text-ink">{g.title ?? `${team.name} ${g.category}`}</h3>
-        <div className="border-t border-dashed border-border" aria-hidden />
-        <div className="flex min-w-0 items-center gap-1.5 text-sm">
+
+        {/* 팀 블록 — lg 전용 (넓은 폭 채움) */}
+        <div className="hidden w-[136px] shrink-0 flex-col items-center justify-center gap-1.5 border-l border-border pl-5 text-center lg:flex">
           <TeamAvatar
             team={team}
-            className="size-5 rounded-full"
-            fallbackClassName="bg-brand-100 text-[9px] text-brand-700"
-            sizes="20px"
+            className="size-10 rounded-full"
+            fallbackClassName="bg-brand-100 text-sm text-brand-700"
+            sizes="40px"
           />
-          <span className="min-w-0 truncate text-ink-soft">
-            <span className="font-semibold text-ink">{team.name}</span> · {venueText}
-          </span>
+          <span className="max-w-full truncate text-[13px] font-bold text-ink">{team.name}</span>
+          <span className="text-[11px] font-medium text-brand-700">자세히 ›</span>
         </div>
-        <div className="text-xs text-ink-mute">{admissionLine(g, status)}</div>
       </div>
 
-      {/* 오른쪽 떼는 스텁 — D-day + 지역 (가격 아님) */}
+      {/* 오른쪽 떼는 스텁 — D-day + 지역 (sm 이상) */}
       <div className="relative hidden w-[80px] shrink-0 flex-col items-center justify-center gap-1.5 rounded-r-2xl border-l-2 border-dashed border-border bg-surface-2 sm:flex">
         <span className="text-xl font-extrabold leading-none text-brand-700">{dday}</span>
         <span className="my-0.5 w-7 border-t border-dashed border-border" aria-hidden />

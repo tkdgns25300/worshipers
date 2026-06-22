@@ -12,7 +12,6 @@ import { cn } from "@/lib/utils";
 import { AgendaCard } from "@/components/gathering/agenda-card";
 import { CATEGORY_ICON } from "@/components/gathering/category-tag";
 import { EmptyState } from "@/components/gathering/empty-state";
-import { AdSlot } from "@/components/ads/ad-slot";
 
 const PERIODS = [
   { id: "all", label: "전체" },
@@ -361,12 +360,6 @@ export function HomeView({ gatherings, teams }: { gatherings: Gathering[]; teams
         />
       ) : (
         <div className="mt-6 space-y-7">{renderTimeline(weeks)}</div>
-      )}
-
-      {total > 0 && (
-        <div className="mt-7">
-          <AdSlot />
-        </div>
       )}
 
       {pastList.length > 0 && (

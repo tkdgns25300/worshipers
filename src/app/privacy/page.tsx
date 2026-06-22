@@ -5,7 +5,7 @@ import { SITE } from "@/constants/site";
 
 export const metadata: Metadata = {
   title: "개인정보처리방침",
-  description: "Worshipers의 쿠키·광고·통계 정보 처리 방침.",
+  description: "Worshipers의 쿠키·통계 정보 처리 방침.",
 };
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
@@ -45,10 +45,10 @@ export default function PrivacyPage() {
             <li>쿠키를 통한 익명 통계 정보</li>
           </ul>
         </Section>
-        <Section title="2. 쿠키 및 광고">
+        <Section title="2. 쿠키 및 통계">
           <p>
-            본 서비스는 이용 통계 분석을 위해 Google Analytics를 사용하며, 이 과정에서 쿠키가 사용됩니다. 또한 서비스
-            운영을 위해 제3자 광고가 게재될 수 있고, 광고 사업자가 맞춤형 광고를 위해 쿠키를 사용할 수 있습니다.
+            본 서비스는 이용 통계 분석을 위해 Google Analytics를 사용하며, 이 과정에서 쿠키가 사용됩니다. 본 서비스는
+            광고를 게재하지 않습니다.
           </p>
           <p>이용자는 브라우저 설정에서 쿠키 저장을 거부할 수 있으며, 이 경우 일부 기능 이용에 제한이 있을 수 있습니다.</p>
         </Section>

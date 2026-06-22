@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getTeams } from "@/lib/queries";
+import { GATHERINGS } from "@/data/gatherings";
 import { TeamsView } from "@/components/team/teams-view";
 
 export const metadata: Metadata = {
@@ -12,7 +13,7 @@ export default function TeamsPage() {
     <div className="mx-auto max-w-5xl px-4 py-8">
       <h1 className="text-2xl font-bold text-ink">예배팀</h1>
       <p className="mt-1 text-ink-mute">워십 모임을 여는 팀을 둘러보세요.</p>
-      <TeamsView teams={getTeams()} />
+      <TeamsView teams={getTeams()} gatherings={GATHERINGS} />
     </div>
   );
 }

@@ -122,21 +122,24 @@ export function HomeView({ gatherings, teams }: { gatherings: Gathering[]; teams
   const renderTimeline = (list: AgendaWeek[]) =>
     list.map((wk) => (
       <section key={wk.key}>
-        <div className="mb-3 flex items-center gap-2.5">
+        <div className="mb-4 flex items-center gap-2.5">
           <span className="rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-xs font-bold text-brand-700">
             {wk.label}
           </span>
           <span className="text-xs text-ink-mute">{wk.range}</span>
           <span className="h-px flex-1 bg-border" aria-hidden />
         </div>
-        <div className="space-y-3">
+        <div className="space-y-5">
           {wk.days.map((day) => (
-            <div key={day.date} className="flex gap-3 sm:gap-4">
-              <div className="w-10 shrink-0 pt-1 text-center">
-                <div className="text-xl font-extrabold leading-none text-ink">{Number(day.date.slice(8, 10))}</div>
-                <div className="mt-1 text-[11px] text-ink-mute">{day.weekday}</div>
+            <div key={day.date}>
+              <div className="mb-2.5 flex items-baseline gap-2">
+                <span className="text-[15px] font-extrabold text-ink">
+                  {Number(day.date.slice(5, 7))}월 {Number(day.date.slice(8, 10))}일
+                </span>
+                <span className="text-sm font-bold text-brand-700">{day.weekday}요일</span>
+                <span className="h-px flex-1 self-center bg-border" aria-hidden />
               </div>
-              <div className="min-w-0 flex-1 space-y-3 pb-1">{day.items.map(renderCard)}</div>
+              <div className="space-y-3">{day.items.map(renderCard)}</div>
             </div>
           ))}
         </div>

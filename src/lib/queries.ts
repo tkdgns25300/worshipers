@@ -36,6 +36,14 @@ function weekRange(mondayIso: string): string {
   return `${mon.getMonth() + 1}.${mon.getDate()} – ${sun.getMonth() + 1}.${sun.getDate()}`;
 }
 
+/** 월요일 ISO → "M월 N째 주" (그 주 월요일이 속한 달 기준). */
+const NTH = ["첫째", "둘째", "셋째", "넷째", "다섯째", "여섯째"] as const;
+function nthWeekLabel(mondayIso: string): string {
+  const [, m, d] = mondayIso.split("-").map(Number);
+  const nth = Math.ceil(d / 7);
+  return `${m}월 ${NTH[nth - 1] ?? `${nth}번째`} 주`;
+}
+
 export interface AgendaDay {
   date: string;
   weekday: string;
@@ -59,7 +67,7 @@ export function groupAgendaWeeks(gatherings: Gathering[], today: string): Agenda
   }
   return [...byWeek.entries()].map(([wk, items]) => {
     const offset = Math.round(daysUntil(wk, todayMonday) / 7);
-    const label = offset === 0 ? "이번 주" : offset === 1 ? "다음 주" : offset === -1 ? "지난 주" : weekRange(wk);
+    const label = offset === 0 ? "이번 주" : offset === 1 ? "다음 주" : offset === -1 ? "지난 주" : nthWeekLabel(wk);
     const byDate = new Map<string, Gathering[]>();
     for (const g of items) {
       (byDate.get(g.date) ?? byDate.set(g.date, []).get(g.date)!).push(g);

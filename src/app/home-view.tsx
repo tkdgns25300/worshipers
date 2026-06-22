@@ -2,23 +2,16 @@
 
 import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Search, X, SlidersHorizontal, ChevronDown, Check, Sparkles, type LucideIcon } from "lucide-react";
+import { Search, X, SlidersHorizontal, ChevronDown, Sparkles, type LucideIcon } from "lucide-react";
 import type { Gathering, Team } from "@/types/domain";
 import { GATHERING_CATEGORIES } from "@/constants/categories";
-import { REGIONS } from "@/constants/regions";
-import { todayKst, daysUntil, getGatheringStatus, gatheringEndDate } from "@/lib/gathering-status";
-import { groupAgendaWeeks, type AgendaWeek } from "@/lib/queries";
+import { todayKst, daysUntil, gatheringEndDate } from "@/lib/gathering-status";
+import { groupAgendaWeeks } from "@/lib/queries";
 import { cn } from "@/lib/utils";
-import { AgendaCard } from "@/components/gathering/agenda-card";
+import { AgendaTimeline } from "@/components/gathering/agenda-timeline";
+import { FilterPanel, type Period } from "@/components/gathering/home-filters";
 import { CATEGORY_ICON } from "@/components/gathering/category-tag";
 import { EmptyState } from "@/components/gathering/empty-state";
-
-const PERIODS = [
-  { id: "all", label: "전체" },
-  { id: "week", label: "이번 주" },
-  { id: "month", label: "이번 달" },
-] as const;
-type Period = (typeof PERIODS)[number]["id"];
 
 const fmtShort = (iso: string) => `${Number(iso.slice(5, 7))}/${Number(iso.slice(8, 10))}`;
 
@@ -33,7 +26,7 @@ export function HomeView({ gatherings, teams }: { gatherings: Gathering[]; teams
     [gatherings],
   );
 
-  // 필터는 URL 파라미터 = 상태 (뒤로가기 복원). 검색·팀검색은 입력 반응성 위해 로컬.
+  // 필터는 URL 파라미터 = 상태 (뒤로가기 복원). 검색은 입력 반응성 위해 로컬.
   const cat = sp.get("cat") ?? "all";
   const region = sp.get("region") ?? "";
   const periodRaw = sp.get("period");
@@ -43,7 +36,6 @@ export function HomeView({ gatherings, teams }: { gatherings: Gathering[]; teams
   const to = sp.get("to") ?? "";
   const teamSel = sp.get("teams")?.split(",").filter(Boolean) ?? [];
   const [query, setQuery] = useState(sp.get("q") ?? "");
-  const [teamQuery, setTeamQuery] = useState("");
   const [filterOpen, setFilterOpen] = useState(false);
   const [showPast, setShowPast] = useState(false);
 
@@ -62,7 +54,6 @@ export function HomeView({ gatherings, teams }: { gatherings: Gathering[]; teams
   }
   function resetAll() {
     setQuery("");
-    setTeamQuery("");
     router.replace("/", { scroll: false });
   }
 
@@ -113,153 +104,18 @@ export function HomeView({ gatherings, teams }: { gatherings: Gathering[]; teams
   ];
   const hasActive = cat !== "all" || appliedChips.length > 0 || Boolean(query);
 
-  const renderCard = (g: Gathering) => {
-    const team = teamById.get(g.teamId);
-    return team ? <AgendaCard key={g.id} g={g} team={team} status={getGatheringStatus(g, today)} today={today} /> : null;
-  };
-
-  const renderTimeline = (list: AgendaWeek[]) =>
-    list.map((wk) => (
-      <section key={wk.key}>
-        <div className="mb-4 flex items-center gap-2.5">
-          <span className="rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-xs font-bold text-brand-700">
-            {wk.label}
-          </span>
-          <span className="text-xs text-ink-mute">{wk.range}</span>
-          <span className="h-px flex-1 bg-border" aria-hidden />
-        </div>
-        <div className="space-y-5">
-          {wk.days.map((day) => (
-            <div key={day.date}>
-              <div className="mb-2.5 flex items-baseline gap-2">
-                <span className="text-[15px] font-extrabold text-ink">
-                  {Number(day.date.slice(5, 7))}월 {Number(day.date.slice(8, 10))}일
-                </span>
-                <span className="text-sm font-bold text-brand-700">{day.weekday}요일</span>
-                <span className="h-px flex-1 self-center bg-border" aria-hidden />
-              </div>
-              <div className="space-y-3">{day.items.map(renderCard)}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-    ));
-
-  const filterPanel = (
-    <div className="space-y-4">
-      <div>
-        <h3 className="mb-2 text-xs font-semibold text-ink-mute">예배팀</h3>
-        <label className="mb-2 flex items-center gap-2 rounded-lg border border-border bg-surface px-3 py-2 text-sm">
-          <Search className="size-4 shrink-0 text-ink-mute" aria-hidden />
-          <input
-            value={teamQuery}
-            onChange={(e) => setTeamQuery(e.target.value)}
-            placeholder="팀 검색"
-            aria-label="팀 검색"
-            className="w-full bg-transparent text-ink outline-none placeholder:text-ink-mute"
-          />
-        </label>
-        <div className="grid max-h-52 grid-cols-2 gap-x-3 gap-y-0.5 overflow-y-auto">
-          {(teamQuery.trim()
-            ? teams.filter((t) => [t.name, t.nameEn].some((s) => s?.toLowerCase().includes(teamQuery.trim().toLowerCase())))
-            : teams
-          ).map((t) => {
-            const on = teamSel.includes(t.id);
-            return (
-              <button
-                key={t.id}
-                type="button"
-                role="checkbox"
-                aria-checked={on}
-                onClick={() => toggleTeam(t.id)}
-                className="flex items-center gap-2 rounded py-1 text-left text-sm text-ink"
-              >
-                <span
-                  className={cn(
-                    "grid size-[18px] shrink-0 place-items-center rounded border transition",
-                    on ? "border-brand-600 bg-brand-600 text-on-brand" : "border-border",
-                  )}
-                >
-                  {on && <Check className="size-3" strokeWidth={3} aria-hidden />}
-                </span>
-                <span className="truncate">{t.name}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      <div>
-        <h3 className="mb-2 text-xs font-semibold text-ink-mute">지역</h3>
-        <select
-          value={region}
-          onChange={(e) => setParam({ region: e.target.value || null })}
-          aria-label="지역"
-          className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-ink"
-        >
-          <option value="">지역 전체</option>
-          {REGIONS.map((r) => (
-            <option key={r} value={r}>
-              {r}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div>
-        <h3 className="mb-2 text-xs font-semibold text-ink-mute">기간</h3>
-        <div className="inline-flex rounded-full border border-border bg-surface p-0.5">
-          {PERIODS.map((p) => (
-            <button
-              key={p.id}
-              type="button"
-              onClick={() => setParam({ period: p.id === "all" ? null : p.id })}
-              className={cn(
-                "rounded-full px-3 py-1 text-sm transition",
-                period === p.id ? "bg-brand-600 text-on-brand" : "text-ink-soft hover:text-ink",
-              )}
-            >
-              {p.label}
-            </button>
-          ))}
-        </div>
-        <div className="mt-2.5 flex items-center gap-2">
-          <input
-            type="date"
-            value={from}
-            max={to || undefined}
-            onChange={(e) => setParam({ from: e.target.value || null })}
-            aria-label="시작 날짜"
-            className="min-w-0 flex-1 rounded-lg border border-border bg-surface px-2.5 py-1.5 text-sm text-ink"
-          />
-          <span className="text-ink-mute">~</span>
-          <input
-            type="date"
-            value={to}
-            min={from || undefined}
-            onChange={(e) => setParam({ to: e.target.value || null })}
-            aria-label="종료 날짜"
-            className="min-w-0 flex-1 rounded-lg border border-border bg-surface px-2.5 py-1.5 text-sm text-ink"
-          />
-        </div>
-      </div>
-
-      <div>
-        <h3 className="mb-2 text-xs font-semibold text-ink-mute">입장</h3>
-        <button
-          type="button"
-          role="switch"
-          aria-checked={free}
-          onClick={() => setParam({ free: free ? null : "1" })}
-          className={cn(
-            "rounded-full border px-3 py-1.5 text-sm transition",
-            free ? "border-brand-600 bg-brand-50 text-brand-700" : "border-border bg-surface text-ink-soft hover:text-ink",
-          )}
-        >
-          무료만
-        </button>
-      </div>
-    </div>
+  const filters = (
+    <FilterPanel
+      teams={teams}
+      teamSel={teamSel}
+      region={region}
+      period={period}
+      free={free}
+      from={from}
+      to={to}
+      onToggleTeam={toggleTeam}
+      setParam={setParam}
+    />
   );
 
   return (
@@ -318,7 +174,7 @@ export function HomeView({ gatherings, teams }: { gatherings: Gathering[]; teams
           <>
             <div className="fixed inset-0 z-30 hidden md:block" onClick={() => setFilterOpen(false)} aria-hidden />
             <div className="absolute left-0 top-full z-40 mt-2 hidden w-[420px] max-w-[calc(100vw-2rem)] rounded-2xl border border-border bg-surface p-4 shadow-lg md:block">
-              {filterPanel}
+              {filters}
               <div className="mt-4 flex gap-2">
                 <button onClick={resetAll} className="flex-1 rounded-full border border-border py-2 text-sm font-medium text-ink">
                   초기화
@@ -359,7 +215,9 @@ export function HomeView({ gatherings, teams }: { gatherings: Gathering[]; teams
           body={query ? "다른 키워드로 찾아보세요." : "필터를 조정해 보세요."}
         />
       ) : (
-        <div className="mt-6 space-y-7">{renderTimeline(weeks)}</div>
+        <div className="mt-6">
+          <AgendaTimeline weeks={weeks} teams={teams} today={today} />
+        </div>
       )}
 
       {pastList.length > 0 && (
@@ -373,7 +231,11 @@ export function HomeView({ gatherings, teams }: { gatherings: Gathering[]; teams
             </span>
             <ChevronDown className={cn("size-4 transition", showPast && "rotate-180")} aria-hidden />
           </button>
-          {showPast && <div className="mt-4 space-y-7">{renderTimeline(pastWeeks)}</div>}
+          {showPast && (
+            <div className="mt-4">
+              <AgendaTimeline weeks={pastWeeks} teams={teams} today={today} />
+            </div>
+          )}
         </div>
       )}
 
@@ -388,7 +250,7 @@ export function HomeView({ gatherings, teams }: { gatherings: Gathering[]; teams
                 <X className="size-5" />
               </button>
             </div>
-            {filterPanel}
+            {filters}
             <div className="mt-4 flex gap-2">
               <button onClick={resetAll} className="flex-1 rounded-full border border-border py-2.5 text-sm font-medium text-ink">
                 초기화

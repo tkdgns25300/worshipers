@@ -80,15 +80,15 @@ Full site: Home, Gathering detail, Team directory, Team detail, About, Privacy. 
 - Host **team card** → links to team detail.
 - Ad slot **below** the core block only.
 
-### C. Team detail (`/teams/[id]`)
-- Team intro: name, description, optional denomination/background, home base, regular-schedule text.
-- **Links** (outbound, only those present): YouTube, Instagram, homepage, Kakao.
-- 대표곡 (signature song titles as text, if any).
-- **That team's upcoming gatherings** (reuse the gathering card).
+### C. Team detail (`/teams/[id]`) — team is the subject, gatherings secondary
+- Colorless header: logo, name (+ English), description.
+- **Info card**: regular-schedule text + home regions (only those present) + **official channels** as icon buttons (YouTube emphasized; outbound, only those present).
+- **That team's upcoming gatherings** as a compact `GatheringRow` list + a collapsible past archive. The full ticket (`AgendaCard`) is home/detail only.
+- No 대표곡 field — cover-song accuracy / respect for originators; famous songs go in the description prose.
 
 ## 7. Data shapes (use realistic fields)
 Mockups should bind to these shapes:
-- **Team**: `name`, `nameEn?`, `description`, `denomination?`, `regularSchedule?`, `regions?[]`, `links{ youtube?, instagram?, homepage?, kakao? }`, `imageUrl?`.
+- **Team**: `name`, `nameEn?`, `description`, `regularSchedule?`, `regions?[]`, `links{ youtube?, instagram?, facebook?, blog?, homepage? }`, `imageUrl?`.
 - **Gathering**: `teamId`, `title?`, `date(YYYY-MM-DD)`, `startTime?`, `endTime?`, `venue{ name, address?, region, mapUrl? }`, `isFree`, `price?(KRW number)`, `registration{ required, url?, deadline? }`, `guests?[]`, `isOnline?`, `liveUrl?`, `sourceUrl`, `note?`.
 - `region` ∈ 시·도 (서울, 경기, 부산, …) + `온라인`.
 
@@ -135,11 +135,10 @@ Now extend it to complete an MVP. Mobile + desktop, light theme with dark-ready 
    - **Core info block** (visual priority, never covered): 일시(date+time) · 장소(name+address + outbound "지도" link) · 입장(무료/유료 + price) · 사전등록(필요여부 + prominent outbound **"등록하기"** button + 마감일) · 게스트 · 온라인 송출 link.
    - "정보 출처" outbound link (official announcement).
    - Host **team card** → team detail.
-2. **Team detail** (`/teams/[id]`)
-   - Header: 예배팀 name + avatar · one-line intro · 정기 일정 · region tags.
-   - Links row (outbound, present-only): YouTube · Instagram · 홈페이지 · Kakao.
-   - 대표곡 (text chips).
-   - "다가오는 모임" list — reuse the gathering card.
+2. **Team detail** (`/teams/[id]`) — team is the subject
+   - Colorless header: avatar + name (+ English) + description.
+   - **Info card**: 정기 일정 + region tags (present-only) + official-channel icon buttons (YouTube emphasized; outbound, present-only).
+   - "다가오는 모임" compact `GatheringRow` list + collapsible past archive.
 3. **About** (`/about`) — service purpose · 문의(mailto `tkdgns25300@naver.com`) · **후원하기**(Toss) button · "정보 정정·삭제 요청" link.
 4. **Privacy** (`/privacy`) — plain, legible policy page (광고·GA 쿠키 고지).
 
@@ -154,7 +153,7 @@ Now extend it to complete an MVP. Mobile + desktop, light theme with dark-ready 
 Output tokens from the established look: color (incl. status), type scale, spacing, radius, shadow (Tailwind theme + CSS vars, light+dark); and the component set (header, footer, filter bar + chips, search, gathering card, status badge, category tag, team card, ad-slot placeholder labeled "광고", donation button, empty state).
 
 ## Data shapes (bind realistic content)
-- **Team**{ name, nameEn?, description, denomination?, regularSchedule?, regions?[], links{youtube?,instagram?,homepage?,kakao?}, imageUrl? }
+- **Team**{ name, nameEn?, description, regularSchedule?, regions?[], links{youtube?,instagram?,facebook?,blog?,homepage?}, imageUrl? }
 - **Gathering**{ teamId, category(정기예배|연합예배|거리예배|수련회|기도모임|절기예배), title?, date, startTime?, endTime?, venue{name,address?,region,mapUrl?}, isFree, price?(KRW number), registration{required,url?,deadline?}, guests?[], isOnline?, liveUrl?, sourceUrl, note? }
 - region = 시·도 + 온라인.
 

@@ -17,7 +17,6 @@ export interface TeamLinks {
   facebook?: string;
   blog?: string; // 네이버 블로그 등
   homepage?: string;
-  kakao?: string;
 }
 
 export interface Team {
@@ -25,7 +24,6 @@ export interface Team {
   name: string;
   nameEn?: string;
   description: string;
-  denomination?: string;
   regularSchedule?: string;
   regions?: Region[];
   links: TeamLinks;

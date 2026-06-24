@@ -51,7 +51,6 @@ export function teamJsonLd(team: Team) {
     team.links.facebook,
     team.links.blog,
     team.links.homepage,
-    team.links.kakao,
   ].filter((u): u is string => Boolean(u));
   return {
     "@context": "https://schema.org",

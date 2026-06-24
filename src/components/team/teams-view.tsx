@@ -75,9 +75,7 @@ export function TeamsView({ teams, gatherings }: { teams: Team[]; gatherings: Ga
                   />
                   <div className="min-w-0">
                     <div className="truncate font-semibold text-ink">{t.name}</div>
-                    {(t.nameEn || t.denomination) && (
-                      <div className="truncate text-xs text-ink-mute">{[t.nameEn, t.denomination].filter(Boolean).join(" · ")}</div>
-                    )}
+                    {t.nameEn && <div className="truncate text-xs text-ink-mute">{t.nameEn}</div>}
                   </div>
                 </div>
 

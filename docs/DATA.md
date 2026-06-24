@@ -26,7 +26,6 @@ export interface Team {
   name: string               // 한글 표기 (예: '마커스')
   nameEn?: string            // 영문 (예: 'Markers')
   description: string        // 한두 문단 소개
-  denomination?: string      // 교단/신학 색깔·배경 (있으면)
   regularSchedule?: string   // 정기집회 주기 텍스트 (예: '매월 둘째 주 금요일')
   regions?: Region[]         // 활동 지역 (팀 '활동 지역' 표시용)
   links: {                   // 있는 것만. 모두 링크 아웃
@@ -35,7 +34,6 @@ export interface Team {
     facebook?: string
     blog?: string            // 네이버 블로그 등
     homepage?: string
-    kakao?: string
   }
   imageUrl?: string          // /images/teams/{id}.png — 팀 로고(정사각 아바타 또는 투명 워드마크). 팀별 허가분만(재호스팅 금지). 없으면 글자 아바타 fallback
 }
@@ -115,7 +113,7 @@ public/images/teams/{team-id}.png   팀 로고/대표 이미지
 ```
 [팀] 마커스 / Markers
 소개: (한 줄)
-링크: youtube= / instagram= / facebook= / blog= / homepage= / kakao=
+링크: youtube= / instagram= / facebook= / blog= / homepage=
 지역: 서울
 
 [집회] 마커스 목요예배 6월
@@ -134,7 +132,7 @@ public/images/teams/{team-id}.png   팀 로고/대표 이미지
 
 | | 필수 | 선택 |
 |---|---|---|
-| **Team** | `id`·`name`·`description`·`links`(≥1) | `nameEn`·`denomination`·`regularSchedule`·`regions`·`imageUrl` |
+| **Team** | `id`·`name`·`description`·`links`(≥1) | `nameEn`·`regularSchedule`·`regions`·`imageUrl` |
 | **Gathering** | `id`·`teamId`·`category`·`date`·**`sourceUrl`** | `venue`(name·region)·`isFree`·`registration`·`title`·`startTime`·`endTime`·`endDate`·`venue.address`·`venue.mapUrl`·`price`·`guests`·`guestTeamIds`·`isOnline`·`liveUrl`·`note` |
 
 > 모르는 선택 필드는 비운다(임의 입력 금지). `id`는 입력자가 안 줘도 규칙(`{team-id}`, `{team-id}-{yyyy-mm-dd}`)대로 자동 부여.

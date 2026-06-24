@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ChevronLeft, Calendar, MapPin, Youtube, Instagram, Facebook, Rss, Globe, MessageCircle, type LucideIcon } from "lucide-react";
+import { ChevronLeft, Calendar, MapPin, Youtube, Instagram, Facebook, Rss, Globe, type LucideIcon } from "lucide-react";
 import type { Team } from "@/types/domain";
 import { TEAMS } from "@/data/teams";
 import { getTeam, getTeamGatherings } from "@/lib/queries";
 import { teamJsonLd, absoluteUrl } from "@/lib/seo";
+import { cn } from "@/lib/utils";
 import { TeamGatherings } from "@/components/team/team-gatherings";
 import { TeamAvatar } from "@/components/team/team-avatar";
 
@@ -29,7 +30,6 @@ const LINKS: { key: keyof Team["links"]; label: string; Icon: LucideIcon }[] = [
   { key: "facebook", label: "Facebook", Icon: Facebook },
   { key: "blog", label: "블로그", Icon: Rss },
   { key: "homepage", label: "홈페이지", Icon: Globe },
-  { key: "kakao", label: "카카오", Icon: MessageCircle },
 ];
 
 export default async function TeamPage({ params }: { params: Promise<{ id: string }> }) {
@@ -39,80 +39,76 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
   const links = LINKS.filter((l) => team.links[l.key]);
 
   return (
-    <article>
+    <article className="mx-auto max-w-3xl px-4 pb-12">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(teamJsonLd(team)) }} />
 
-      <div className="bg-brand-600 text-on-brand">
-        <div className="mx-auto max-w-3xl px-4 py-8">
-          <Link href="/" className="mb-4 inline-flex items-center gap-1 text-sm opacity-80 hover:opacity-100">
-            <ChevronLeft className="size-4" aria-hidden />
-            둘러보기
-          </Link>
-          <div className="flex items-center gap-3">
-            <TeamAvatar
-              team={team}
-              className="size-14 shrink-0 rounded-2xl"
-              fallbackClassName="bg-white/20 text-xl"
-              sizes="56px"
-            />
-            <div>
-              <h1 className="text-2xl font-bold">{team.name}</h1>
-              <div className="text-sm opacity-80">
-                {team.nameEn}
-                {team.denomination ? ` · ${team.denomination}` : ""}
-              </div>
-            </div>
-          </div>
-          <p className="mt-3 text-sm opacity-90">{team.description}</p>
+      <Link href="/" className="mt-4 inline-flex items-center gap-1 text-sm text-ink-mute hover:text-ink-soft">
+        <ChevronLeft className="size-4" aria-hidden />
+        둘러보기
+      </Link>
+
+      {/* 헤더 — 무채색 (사이트 전체 톤과 일관) */}
+      <header className="mt-2 flex items-start gap-4">
+        <TeamAvatar
+          team={team}
+          className="size-16 shrink-0 rounded-2xl"
+          fallbackClassName="bg-brand-100 text-2xl text-brand-700"
+          sizes="64px"
+        />
+        <div className="min-w-0 pt-1">
+          <h1 className="text-2xl font-extrabold tracking-tight text-ink sm:text-3xl">{team.name}</h1>
+          {team.nameEn && <p className="mt-0.5 text-sm text-ink-mute">{team.nameEn}</p>}
         </div>
-      </div>
+      </header>
+      <p className="mt-4 text-[15px] leading-relaxed text-ink-soft">{team.description}</p>
 
-      <div className="mx-auto max-w-3xl space-y-6 px-4 py-6">
-        {(team.regularSchedule || (team.regions && team.regions.length > 0)) && (
-          <div className="grid grid-cols-2 gap-3">
-            {team.regularSchedule && (
-              <div className="rounded-xl border border-border bg-surface p-3">
-                <div className="flex items-center gap-1.5 text-xs text-ink-mute">
-                  <Calendar className="size-3.5" aria-hidden />
-                  정기 일정
-                </div>
-                <div className="mt-1 text-sm font-medium text-ink">{team.regularSchedule}</div>
-              </div>
-            )}
-            {team.regions && team.regions.length > 0 && (
-              <div className="rounded-xl border border-border bg-surface p-3">
-                <div className="flex items-center gap-1.5 text-xs text-ink-mute">
-                  <MapPin className="size-3.5" aria-hidden />
-                  활동 지역
-                </div>
-                <div className="mt-1 text-sm font-medium text-ink">{team.regions.join(" · ")}</div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {links.length > 0 && (
-          <div className="flex flex-wrap gap-2">
-            {links.map((l) => (
+      {/* 정보 카드 — 정기 일정 · 활동 지역 + 공식 채널 */}
+      <div className="mt-5 divide-y divide-border-soft overflow-hidden rounded-2xl border border-border bg-surface">
+        {team.regularSchedule && <InfoRow Icon={Calendar} label="정기 일정" value={team.regularSchedule} />}
+        {team.regions && team.regions.length > 0 && <InfoRow Icon={MapPin} label="활동 지역" value={team.regions.join(" · ")} />}
+        <div className="flex flex-wrap gap-2.5 px-4 py-3.5">
+          {links.map((l) => {
+            const primary = l.key === "youtube";
+            return (
               <a
                 key={l.key}
                 href={team.links[l.key]}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-3 py-1.5 text-sm text-ink-soft hover:text-ink"
+                aria-label={l.label}
+                title={l.label}
+                className={cn(
+                  "grid size-11 place-items-center rounded-xl border transition",
+                  primary
+                    ? "border-brand-600 bg-brand-600 text-on-brand"
+                    : "border-border bg-surface text-ink-soft hover:text-ink",
+                )}
               >
-                <l.Icon className="size-4" aria-hidden />
-                {l.label}
+                <l.Icon className="size-5" aria-hidden />
               </a>
-            ))}
-          </div>
-        )}
-
-        <div>
-          <h2 className="mb-2 text-lg font-bold text-ink">다가오는 모임</h2>
-          <TeamGatherings team={team} gatherings={getTeamGatherings(team.id)} teams={TEAMS} />
+            );
+          })}
         </div>
       </div>
+
+      {/* 모임 — 보조(컴팩트). 다가오는 + 지난 집회 */}
+      <div className="mt-8">
+        <TeamGatherings team={team} gatherings={getTeamGatherings(team.id)} teams={TEAMS} />
+      </div>
     </article>
+  );
+}
+
+function InfoRow({ Icon, label, value }: { Icon: LucideIcon; label: string; value: string }) {
+  return (
+    <div className="flex items-center gap-3.5 px-4 py-3.5">
+      <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-surface-2 text-brand-700">
+        <Icon className="size-4" aria-hidden />
+      </span>
+      <div className="min-w-0">
+        <div className="text-xs font-semibold text-ink-mute">{label}</div>
+        <div className="mt-0.5 text-[15px] font-bold text-ink">{value}</div>
+      </div>
+    </div>
   );
 }

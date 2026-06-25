@@ -23,7 +23,7 @@ const thursday = (date: string): Gathering => ({
   isOnline: true,
   liveUrl: "https://www.youtube.com/markersworship", // 채널 URL(개별 라이브 링크 아님).
   sourceUrl: "https://markersworship.com",
-  note: "6호선 상월곡역 3번 출구 도보 1분. 예약·신청 없이 매주 현장 입장 — 오후 6시부터 도착순(방학기간엔 5:30부터), 7시 자리정리. 주차는 교회 지하 3·4층(약 60대)·인근 마장동 공영주차장(교회 부근 버스 주차 불가). 유아실은 7:10부터.",
+  note: "교통 — 6호선 상월곡역 3번 출구에서 도보 1분\n입장 — 예약·신청 없이 현장 입장. 오후 6시부터 도착순(방학 기간엔 5:30부터 가능), 7시에 자리 정리\n주차 — 교회 지하 3·4층(약 60대). 방학 기간엔 6:30 이전 만석되니 주변 공영주차장을 미리 확인하세요\n유아실 — 본당 2층, 오후 7:10부터(보호자 동반)",
 });
 
 export const gatherings: Gathering[] = [

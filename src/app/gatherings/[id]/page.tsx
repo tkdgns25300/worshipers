@@ -83,7 +83,6 @@ export default async function GatheringPage({ params }: { params: Promise<{ id: 
   const deadlineLabel = g.registration?.deadline ? g.registration.deadline.slice(5).replace("-", ".") : null;
   const hasGuests = guestTeams.length > 0 || (g.guests?.length ?? 0) > 0;
   const map = g.venue ? mapUrls(g.venue) : null;
-  const teamOthers = getTeamGatherings(team.id).filter((x) => x.id !== g.id);
 
   return (
     <article>
@@ -184,13 +183,8 @@ export default async function GatheringPage({ params }: { params: Promise<{ id: 
           </div>
         </div>
 
-        {/* 참석 안내 (교통·주차·입장시각 등 — note) */}
-        {g.note && (
-          <section className="mt-5 rounded-2xl border border-border bg-surface p-5">
-            <h2 className="mb-2 text-xs font-bold tracking-wide text-ink-mute">참석 안내</h2>
-            <p className="text-sm leading-relaxed text-ink-soft">{g.note}</p>
-          </section>
-        )}
+        {/* 참석 안내 (교통·주차·입장시각 등 — note). "라벨 — 내용" 줄은 라벨형, 자유 텍스트는 그대로. */}
+        {g.note && <AttendanceInfo note={g.note} />}
 
         {/* 정보 출처 */}
         <a
@@ -207,9 +201,39 @@ export default async function GatheringPage({ params }: { params: Promise<{ id: 
         <div className="mt-6">
           <h2 className="mb-2 text-xs font-bold tracking-wide text-ink-mute">주최 예배팀</h2>
           <TeamCard team={team} />
-          <TeamNextCount teamId={team.id} teamName={team.name} gatherings={teamOthers} />
+          <TeamNextCount team={team} current={g} gatherings={getTeamGatherings(team.id)} />
         </div>
       </div>
     </article>
+  );
+}
+
+// 참석 안내 — "라벨 — 내용" 줄은 라벨형 리스트로, 그 외 자유 텍스트는 한 단락으로.
+function AttendanceInfo({ note }: { note: string }) {
+  const lines = note
+    .split("\n")
+    .map((l) => l.trim())
+    .filter(Boolean);
+  const structured = lines.some((l) => l.includes(" — "));
+  return (
+    <section className="mt-5 rounded-2xl border border-border bg-surface p-5">
+      <h2 className="mb-3 text-xs font-bold tracking-wide text-ink-mute">참석 안내</h2>
+      {structured ? (
+        <div className="space-y-2.5 text-sm">
+          {lines.map((line, i) => {
+            const sep = line.indexOf(" — ");
+            if (sep === -1) return <p key={i} className="leading-relaxed text-ink-soft">{line}</p>;
+            return (
+              <div key={i} className="flex gap-3">
+                <span className="w-14 shrink-0 font-semibold text-ink">{line.slice(0, sep)}</span>
+                <span className="flex-1 leading-relaxed text-ink-soft">{line.slice(sep + 3)}</span>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <p className="text-sm leading-relaxed text-ink-soft">{note}</p>
+      )}
+    </section>
   );
 }

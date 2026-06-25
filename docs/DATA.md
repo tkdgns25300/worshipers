@@ -65,7 +65,7 @@ export interface Gathering {
   isOnline?: boolean         // 온라인 송출 있음 (오프라인+송출 하이브리드 포함). 순수 온라인은 venue.region='온라인'
   liveUrl?: string           // 온라인 송출 링크 (isOnline일 때)
   sourceUrl: string          // 필수 — 공식 공지 출처
-  note?: string              // 비고 (주차·수용인원 등 짧게)
+  note?: string              // 참석 안내. 줄(`\n`)마다 `라벨 — 내용`이면 라벨형 리스트로, 아니면 한 단락으로 렌더 (예: '교통 — 6호선 …')
 }
 ```
 

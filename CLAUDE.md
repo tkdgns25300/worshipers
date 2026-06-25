@@ -1,8 +1,8 @@
 # CLAUDE.md — Worshipers
 
-> **이 파일은 HOW** — 아키텍처·날짜 freshness·코드 컨벤션. 페이지 기능은 [`docs/SPEC.md`](./docs/SPEC.md), 데이터 모델·파일 규칙은 [`docs/DATA.md`](./docs/DATA.md), 진행 상황은 [`docs/ROADMAP.md`](./docs/ROADMAP.md), 비주얼·브랜드 방향은 [`docs/DESIGN_BRIEF.md`](./docs/DESIGN_BRIEF.md), 환경·재개는 [`README.md`](./README.md), 시점 핸드오프는 [`docs/SNAPSHOT.md`](./docs/SNAPSHOT.md).
+> **이 파일은 HOW** — 아키텍처·날짜 freshness·코드 컨벤션. 페이지 기능은 [`docs/SPEC.md`](./docs/SPEC.md), 데이터 모델·파일 규칙은 [`docs/DATA.md`](./docs/DATA.md), 진행 상황은 [`docs/ROADMAP.md`](./docs/ROADMAP.md), 비주얼 토큰은 [`design/tokens.css`](./design/tokens.css), 환경·재개는 [`README.md`](./README.md), 시점 핸드오프는 [`docs/SNAPSHOT.md`](./docs/SNAPSHOT.md).
 >
-> **문서 책임 분리** — 같은 사실을 두 곳에 쓰지 않는다. 아키텍처·컨벤션은 여기, 페이지 명세는 SPEC, 데이터는 DATA, 비주얼·브랜드는 DESIGN_BRIEF, 작업은 ROADMAP, 환경은 README.
+> **문서 책임 분리** — 같은 사실을 두 곳에 쓰지 않는다. 아키텍처·컨벤션은 여기, 페이지 명세는 SPEC, 데이터는 DATA, 비주얼 토큰은 design/tokens.css, 작업은 ROADMAP, 환경은 README.
 
 ## Project
 

@@ -43,4 +43,4 @@
 
 ## 문서 지도
 
-`CLAUDE.md` HOW · `README.md` 환경 · `docs/SPEC.md` 페이지·기능 · `docs/DATA.md` 데이터 모델·운영 · `docs/ROADMAP.md` 작업 · `docs/DESIGN_BRIEF.md` 디자인 브리프 · `design/tokens.css` 토큰 · `design/*.html` 디자인 시안(스크래치)
+`CLAUDE.md` HOW · `README.md` 환경 · `docs/SPEC.md` 페이지·기능 · `docs/DATA.md` 데이터 모델·운영 · `docs/ROADMAP.md` 작업 · `design/tokens.css` 토큰 · `design/*.html` 디자인 시안(스크래치)

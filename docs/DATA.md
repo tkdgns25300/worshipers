@@ -25,7 +25,7 @@ export interface Team {
   id: string                 // 영어 kebab-case, 파일명·URL과 동일 (예: 'markers')
   name: string               // 한글 표기 (예: '마커스')
   nameEn?: string            // 영문 (예: 'Markers')
-  description: string        // 한두 문단 소개
+  description: string        // 한두 문단 소개. 문단 구분은 빈 줄(`\n\n`) — 렌더 시 <p>로 분리
   regularSchedule?: string   // 정기집회 주기 텍스트 (예: '매월 둘째 주 금요일')
   regions?: Region[]         // 활동 지역 (팀 '활동 지역' 표시용)
   links: {                   // 있는 것만. 모두 링크 아웃

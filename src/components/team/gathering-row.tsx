@@ -18,11 +18,13 @@ export function GatheringRow({
   team,
   status,
   today,
+  recurrence,
 }: {
   g: Gathering;
   team: Team;
   status: GatheringStatus;
   today: string;
+  recurrence?: string; // 정기 반복이면 "매주 목" 등 — 배지로 표시(다음 회차만 보여줌)
 }) {
   const ended = status === "종료";
   const d = daysUntil(g.date, today);
@@ -42,7 +44,12 @@ export function GatheringRow({
         <div className="text-[11px] font-semibold text-ink-mute">{weekdayKo(g.date)}</div>
       </div>
       <div className="min-w-0 flex-1">
-        <div className="truncate text-sm font-bold text-ink">{g.title ?? `${team.name} ${g.category}`}</div>
+        <div className="flex items-center gap-1.5">
+          <span className="truncate text-sm font-bold text-ink">{g.title ?? `${team.name} ${g.category}`}</span>
+          {recurrence && (
+            <span className="shrink-0 rounded-full bg-brand-50 px-1.5 py-0.5 text-[10px] font-bold text-brand-700">{recurrence}</span>
+          )}
+        </div>
         <div className="truncate text-xs text-ink-mute">{sub}</div>
       </div>
       <div className="flex shrink-0 items-center gap-1.5">

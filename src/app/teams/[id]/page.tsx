@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ChevronLeft, Calendar, MapPin, Youtube, Instagram, Facebook, Rss, Globe, type LucideIcon } from "lucide-react";
+import type { ComponentType, SVGProps } from "react";
+import { ChevronLeft, Calendar, MapPin, Rss, Globe } from "lucide-react";
 import type { Team } from "@/types/domain";
 import { TEAMS } from "@/data/teams";
 import { getTeam, getTeamGatherings } from "@/lib/queries";
 import { teamJsonLd, absoluteUrl } from "@/lib/seo";
-import { cn } from "@/lib/utils";
 import { TeamGatherings } from "@/components/team/team-gatherings";
 import { TeamAvatar } from "@/components/team/team-avatar";
+import { YoutubeIcon, InstagramIcon, FacebookIcon } from "@/components/icons/brand-icons";
+
+type ChannelIcon = ComponentType<SVGProps<SVGSVGElement>>;
 
 export const dynamicParams = false;
 
@@ -24,10 +27,10 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   return { title, description: team.description, openGraph: { title, description: team.description, url: absoluteUrl(`/teams/${id}`) } };
 }
 
-const LINKS: { key: keyof Team["links"]; label: string; Icon: LucideIcon }[] = [
-  { key: "youtube", label: "YouTube", Icon: Youtube },
-  { key: "instagram", label: "Instagram", Icon: Instagram },
-  { key: "facebook", label: "Facebook", Icon: Facebook },
+const LINKS: { key: keyof Team["links"]; label: string; Icon: ChannelIcon }[] = [
+  { key: "youtube", label: "YouTube", Icon: YoutubeIcon },
+  { key: "instagram", label: "Instagram", Icon: InstagramIcon },
+  { key: "facebook", label: "Facebook", Icon: FacebookIcon },
   { key: "blog", label: "블로그", Icon: Rss },
   { key: "homepage", label: "홈페이지", Icon: Globe },
 ];
@@ -60,34 +63,34 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
           {team.nameEn && <p className="mt-0.5 text-sm text-ink-mute">{team.nameEn}</p>}
         </div>
       </header>
-      <p className="mt-4 text-[15px] leading-relaxed text-ink-soft">{team.description}</p>
+      <div className="mt-4 space-y-3 text-[15px] leading-relaxed text-ink-soft">
+        {team.description
+          .split("\n\n")
+          .map((para) => para.trim())
+          .filter(Boolean)
+          .map((para, i) => (
+            <p key={i}>{para}</p>
+          ))}
+      </div>
 
       {/* 정보 카드 — 정기 일정 · 활동 지역 + 공식 채널 */}
       <div className="mt-5 divide-y divide-border-soft overflow-hidden rounded-2xl border border-border bg-surface">
         {team.regularSchedule && <InfoRow Icon={Calendar} label="정기 일정" value={team.regularSchedule} />}
         {team.regions && team.regions.length > 0 && <InfoRow Icon={MapPin} label="활동 지역" value={team.regions.join(" · ")} />}
         <div className="flex flex-wrap gap-2.5 px-4 py-3.5">
-          {links.map((l) => {
-            const primary = l.key === "youtube";
-            return (
-              <a
-                key={l.key}
-                href={team.links[l.key]}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={l.label}
-                title={l.label}
-                className={cn(
-                  "grid size-11 place-items-center rounded-xl border transition",
-                  primary
-                    ? "border-brand-600 bg-brand-600 text-on-brand"
-                    : "border-border bg-surface text-ink-soft hover:text-ink",
-                )}
-              >
-                <l.Icon className="size-5" aria-hidden />
-              </a>
-            );
-          })}
+          {links.map((l) => (
+            <a
+              key={l.key}
+              href={team.links[l.key]}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={l.label}
+              title={l.label}
+              className="grid size-11 place-items-center rounded-xl border border-border bg-surface text-ink-soft transition hover:bg-surface-2"
+            >
+              <l.Icon className="size-5" aria-hidden />
+            </a>
+          ))}
         </div>
       </div>
 
@@ -99,7 +102,7 @@ export default async function TeamPage({ params }: { params: Promise<{ id: strin
   );
 }
 
-function InfoRow({ Icon, label, value }: { Icon: LucideIcon; label: string; value: string }) {
+function InfoRow({ Icon, label, value }: { Icon: ChannelIcon; label: string; value: string }) {
   return (
     <div className="flex items-center gap-3.5 px-4 py-3.5">
       <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-surface-2 text-brand-700">

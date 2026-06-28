@@ -5,9 +5,9 @@ import { daysUntil } from "@/lib/gathering-status";
 import { TeamAvatar } from "@/components/team/team-avatar";
 
 // 예배권 티켓 카드 — 반응형:
-//  · 모바일(<sm): 시간 스텁 + 본문(eyebrow에 D-day, 장소 줄에 지역). 2단.
-//  · 태블릿(sm~lg): + 오른쪽 D-day·지역 떼는 스텁. 3단.
-//  · 데스크톱(lg+): + 본문 오른쪽 팀 블록(로고·팀명·자세히)으로 넓은 폭을 채움.
+//  · 모바일(<sm): 시간 스텁 + 본문(eyebrow에 D-day, 팀·장소 한 줄). 2단.
+//  · 태블릿(sm~md): + 오른쪽 D-day·지역 떼는 스텁. 3단.
+//  · 데스크톱(md+): 본문을 정보(좌)·팀 블록(우) 2분할 — 팀 블록은 자기 영역 가운데 정렬로 균형 있게 채움.
 // 날짜는 타임라인 축이 맡고, 무료·등록은 가격표처럼이 아니라 조용한 한 줄.
 
 function time12(hhmm?: string): { ampm: string; t: string } | null {
@@ -68,8 +68,8 @@ export function AgendaCard({
         <span className={cn(NOTCH, "-right-[7px] -bottom-[7px]")} aria-hidden />
       </div>
 
-      {/* 본문 (lg에서 정보 + 팀 블록 2단) */}
-      <div className="flex min-w-0 flex-1 flex-col px-4 py-4 sm:px-5 sm:py-5 lg:flex-row lg:gap-5">
+      {/* 본문 (md+에서 정보 + 팀 블록 2분할) */}
+      <div className="flex min-w-0 flex-1 flex-col px-4 py-4 sm:px-5 sm:py-5 md:flex-row md:gap-4">
         <div className="flex min-w-0 flex-1 flex-col justify-center gap-1.5 sm:gap-2">
           <div className="flex items-center justify-between gap-2">
             <span className="text-[11px] font-bold tracking-[0.04em] text-brand-700">
@@ -79,9 +79,9 @@ export function AgendaCard({
             <span className="shrink-0 text-[11px] font-bold text-brand-700 sm:hidden">{dday}</span>
           </div>
           <h3 className="truncate text-base font-bold text-ink sm:text-[17px]">{g.title ?? `${team.name} ${g.category}`}</h3>
-          <div className="border-t border-dashed border-border lg:hidden" aria-hidden />
-          {/* 팀+장소 (lg 미만) / 장소만 (lg, 팀은 오른쪽 블록) */}
-          <div className="flex min-w-0 items-center gap-1.5 text-sm lg:hidden">
+          <div className="border-t border-dashed border-border md:hidden" aria-hidden />
+          {/* 팀+장소 (md 미만) / 장소만 (md+, 팀은 오른쪽 블록) */}
+          <div className="flex min-w-0 items-center gap-1.5 text-sm md:hidden">
             <TeamAvatar
               team={team}
               className="size-5 rounded-full"
@@ -92,12 +92,12 @@ export function AgendaCard({
               <span className="font-semibold text-ink">{team.name}</span> · {venueText}
             </span>
           </div>
-          <div className="hidden min-w-0 truncate text-sm text-ink-soft lg:block">{venueText}</div>
+          <div className="hidden min-w-0 truncate text-sm text-ink-soft md:block">{venueText}</div>
           <div className="text-xs text-ink-mute">{admissionLine(g, status)}</div>
         </div>
 
-        {/* 팀 블록 — lg 전용 (넓은 폭 채움) */}
-        <div className="hidden w-[136px] shrink-0 flex-col items-center justify-center gap-1.5 border-l border-border pl-5 text-center lg:flex">
+        {/* 팀 블록 — md+ (정보는 넓게, 팀은 오른쪽 고정폭) */}
+        <div className="hidden w-[140px] shrink-0 flex-col items-center justify-center gap-1.5 border-l border-border pl-4 text-center md:flex">
           <TeamAvatar
             team={team}
             className="size-10 rounded-full"

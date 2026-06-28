@@ -2,9 +2,9 @@
 
 > 재개 시 **첫 참조**. "지금 어디까지 됐고, 다음에 뭘 하는가"만. 상세는 SPEC/DATA, 전체 작업은 ROADMAP.
 
-## 시점 (2026-06-25)
+## 시점 (2026-06-29)
 
-- **단계**: Phase 1 — 핵심 화면 재설계 완료(홈·집회상세·팀 디렉토리·팀 상세) + **마커스워십 = 첫 완성 팀(데이터 기준 템플릿)**. 다음 = 나머지 팀 데이터 확충 / 배포.
+- **단계**: Phase 1 — 핵심 화면 재설계 완료 + **정기예배 = 반복 규칙(recurrence) 모델로 전환**(날짜 하드코딩 제거, 자동 전개). **마커스워십·예수전도단 = 완성 팀**. 다음 = 나머지 팀 데이터 확충 / 배포.
 - **브랜치**: `dev`·`main` 동기화. default `main`, merge 커밋 없음(fast-forward). 원격 SSH(`git@github.com:tkdgns25300/worshipers`).
 - **검증**: `npx tsc --noEmit` + `npm run lint`. ⚠️ dev 서버 켜져 있으면 `npm run build` 금지(`.next` 충돌). 배포 전 클린 빌드 1회 권장(OG 이미지가 빌드 때 폰트 fetch).
 - **⚠️ dev 포트 유동**: worshipers dev는 3000~3002 중 하나로 뜸(다른 프로젝트와 경쟁). **`<title>Worshipers</title>`로 확인**.
@@ -19,18 +19,19 @@
 - **팀 상세(`teams/[id]`)**: 팀이 주어 — 무채색 헤더(로고·이름·소개 **문단**) + **정보 카드**(정기일정·활동지역 + 공식 채널 **브랜드 색 로고**) + 다가오는 모임 **컴팩트 행(`GatheringRow`)**, **정기 반복은 "매주 N" 배지로 1줄 접기**(제목+장소+시간 키) + **지난 집회 접기(반복분 제외)**. 옛 캘린더 타일 `GatheringCard` 삭제. 미사용 Team 필드 `denomination`·`links.kakao` 제거.
 - **광고 제거**: 홈 AdSlot·컴포넌트 삭제, about/privacy 문구 후원 중심으로, `.env` 광고 키 제거.
 - **타이포·데이터 기준**: 한글 줄바꿈 `word-break: keep-all`(단어 안 끊김) + 소개는 빈 줄 문단. 브랜드 로고 = Simple Icons 글리프(`brand-icons.tsx`). **마커스워십**을 공식 자료로 전부 채워(온라인 실황·교통·주차·유아실 등) 나머지 팀 입력 기준으로 삼음.
-- **클라이언트 아일랜드(KST)**: `StatusDot`·`DdayBadge`·`GatheringActions`·`TeamNextCount`·`HomeView`·`TeamsView`·`TeamGatherings`. 나머지 정적 + JSON-LD.
+- **클라이언트 아일랜드(KST)**: `StatusDot`·`DdayBadge`·`GatheringActions`·`TeamNextCount`·`NextOccurrence`·`HomeView`·`TeamsView`·`TeamGatherings`. 나머지 정적 + JSON-LD.
+- **정기 반복 모델(recurrence)**: 매주 예배는 날짜를 안 박고 `recurrence{weekday, until?, exceptions?}`만 저장 → 읽을 때 오늘(KST) 기준 회차 자동 전개(`expandGatherings`, 약 8주). 상세는 회차별 대신 **시리즈 1페이지**(`markers-thursday` 등) — "매주 N요일 + 다음 회차"(클라). 헬퍼는 `lib/gathering-status`(occurrenceDates·nextDateOf·resolveOccurrence), 상수 `constants/schedule`(WEEKDAY·AGENDA_HORIZON_DAYS). **마커스·어노인팅·피아·예수전도단** 전환 완료. 휴회는 exceptions(예: YWAM 8/4 MC 주간).
 
 ## 다음 할 일
 
-1. **나머지 팀 데이터 확충 (마커스 기준)** — 사용자 자료 받아 한 팀씩: 9팀(제이어스·어노인팅·위러브·예수전도단·아이자야61·잔치공동체·피아워십·예람워십·팀룩워십) 검수·확충 + 신규 6팀(기프티드·브리지임팩트·히즈윌·아가파오워십·웨이홈·키퍼스워십) 등록. `TODO(검수)`/`TODO(운영)` 확정 + 주간 반복 날짜 연장(콘텐츠가 페이지를 채우는 레버).
+1. **나머지 팀 데이터 확충 (마커스 기준)** — 한 팀씩 검수·확충. 검수 완료: 마커스·예수전도단. 남음: 제이어스·어노인팅·위러브·아이자야61·잔치공동체·피아워십·예람워십·팀룩워십(정기예배는 recurrence로) + 신규 6팀(기프티드·브리지임팩트·히즈윌·아가파오워십·웨이홈·키퍼스워십). `TODO(검수)` 확정(sourceUrl 공지 URL화 등). **반복 날짜 연장은 이제 불필요**(recurrence 자동 전개).
 2. **배포** — Vercel + 도메인 `worshipers.life` + GA4/Search Console. ⚠️ 공개 전 **팀 로고 허가** 확보 + 클린 빌드 1회.
 3. **(선택·보류)** 카카오톡 공유(Kakao JS키 필요).
 
 ## 확정된 값
 
 - **아키텍처**: DB 없음 · 파일 기반(`src/data/**`) · SSG · Vercel. 로그인·인증·서버액션 없음.
-- **데이터 모델**: 상태(예정/오늘/등록마감/종료)는 클라이언트 KST 파생. `endDate`·`guestTeamIds`(참여팀 교차 노출)·`venue`/`isFree`/`registration` 선택값(티저) 지원. 재호스팅 금지·링크아웃. `sourceUrl` 타입상 필수.
+- **데이터 모델**: 상태(예정/오늘/등록마감/종료)는 클라이언트 KST 파생. 단발=`date`(+`endDate` 다중일) / 정기=`recurrence`(둘 중 하나). `guestTeamIds`(참여팀 교차 노출)·`venue`/`isFree`/`registration` 선택값(티저) 지원. 재호스팅 금지·링크아웃. `sourceUrl` 타입상 필수. 1회성 임시 공지(예: 특정 주 주차 불가)는 추적 안 함 — 휴회만 `exceptions`.
 - **디자인**: Dawn 팔레트, Pretendard(큰 시간만 세리프). 목록=아젠다 타임라인+예배권 티켓 / 상세=보딩패스 티켓. 길찾기=주소 자동 링크. 디자인 시안=`design/*.html`(스크래치).
 - **수익**: 광고 안 함, 후원 중심 — 단 **수익 모델 재확인 예정**(제휴/추천 슬롯 도입 여부). 후원 수단도 미확정: 토스 링크 + **계좌(은행·계좌번호·예금주)** 표기 필요. (ROADMAP 1-7)
 - **주석**: **한글 허용**(식별자·커밋은 영어). — 결정 완료, CLAUDE.md 반영.

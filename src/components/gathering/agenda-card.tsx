@@ -39,7 +39,7 @@ export function AgendaCard({
   const venueText = g.venue ? `${g.venue.name}${g.venue.region ? ` · ${g.venue.region}` : ""}` : "장소 추후 공지";
   const regionText = g.venue?.region ?? (g.isOnline ? "온라인" : "미정");
   const tm = time12(g.startTime);
-  const d = daysUntil(g.date, today);
+  const d = daysUntil(g.date ?? today, today);
   const dday = status === "종료" ? "종료" : d <= 0 ? "오늘" : `D-${d}`;
 
   return (

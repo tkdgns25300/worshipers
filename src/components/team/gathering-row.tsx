@@ -27,7 +27,8 @@ export function GatheringRow({
   recurrence?: string; // 정기 반복이면 "매주 목" 등 — 배지로 표시(다음 회차만 보여줌)
 }) {
   const ended = status === "종료";
-  const d = daysUntil(g.date, today);
+  const date = g.date ?? today; // 전개된 회차라 항상 존재
+  const d = daysUntil(date, today);
   const dday = ended ? "종료" : d <= 0 ? "오늘" : `D-${d}`;
   const region = g.venue?.region ?? (g.isOnline ? "온라인" : null);
   const sub = [time12ko(g.startTime), g.venue?.name ?? "장소 추후 공지", region].filter(Boolean).join(" · ");
@@ -39,9 +40,9 @@ export function GatheringRow({
     >
       <div className="w-11 shrink-0 text-center leading-tight">
         <div className="text-sm font-extrabold text-ink">
-          {Number(g.date.slice(5, 7))}/{Number(g.date.slice(8, 10))}
+          {Number(date.slice(5, 7))}/{Number(date.slice(8, 10))}
         </div>
-        <div className="text-[11px] font-semibold text-ink-mute">{weekdayKo(g.date)}</div>
+        <div className="text-[11px] font-semibold text-ink-mute">{weekdayKo(date)}</div>
       </div>
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-1.5">

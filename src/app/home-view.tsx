@@ -6,7 +6,7 @@ import { Search, X, SlidersHorizontal, ChevronDown, Sparkles, type LucideIcon } 
 import type { Gathering, Team } from "@/types/domain";
 import { GATHERING_CATEGORIES } from "@/constants/categories";
 import { todayKst, daysUntil, gatheringEndDate } from "@/lib/gathering-status";
-import { groupAgendaWeeks } from "@/lib/queries";
+import { groupAgendaWeeks, expandGatherings } from "@/lib/queries";
 import { cn } from "@/lib/utils";
 import { AgendaTimeline } from "@/components/gathering/agenda-timeline";
 import { FilterPanel, type Period } from "@/components/gathering/home-filters";
@@ -20,6 +20,8 @@ export function HomeView({ gatherings, teams }: { gatherings: Gathering[]; teams
   const router = useRouter();
   const today = useMemo(() => todayKst(), []);
   const teamById = useMemo(() => new Map(teams.map((t) => [t.id, t])), [teams]);
+  // 정기 반복은 오늘 기준 다가오는 회차로 전개해서 표시(날짜 하드코딩 없음).
+  const expanded = useMemo(() => expandGatherings(gatherings, today), [gatherings, today]);
   // 카테고리 칩은 실제 데이터에 존재하는 종류만 (canonical 순서 유지). 데이터 추가 시 자동 노출.
   const presentCategories = useMemo(
     () => GATHERING_CATEGORIES.filter((c) => gatherings.some((g) => g.category === c)),
@@ -66,7 +68,7 @@ export function HomeView({ gatherings, teams }: { gatherings: Gathering[]; teams
     }
     if (free && !g.isFree) return false;
     if (from && gatheringEndDate(g) < from) return false;
-    if (to && g.date > to) return false;
+    if (to && (g.date ?? "") > to) return false;
     if (!q) return true;
     const t = teamById.get(g.teamId);
     const guestTeamNames = (g.guestTeamIds ?? []).map((id) => teamById.get(id)?.name);
@@ -76,12 +78,12 @@ export function HomeView({ gatherings, teams }: { gatherings: Gathering[]; teams
   };
   const inPeriod = (g: Gathering): boolean => {
     if (period === "all") return true;
-    const n = daysUntil(g.date, today);
+    const n = daysUntil(g.date ?? today, today);
     if (n < 0) return true; // 진행 중(다중일)
     return period === "week" ? n <= 7 : n <= 31;
   };
 
-  const matched = gatherings.filter(matches);
+  const matched = expanded.filter(matches);
   const upcoming = matched.filter((g) => gatheringEndDate(g) >= today && inPeriod(g));
   const pastList = matched.filter((g) => gatheringEndDate(g) < today);
   const weeks = groupAgendaWeeks(upcoming, today);

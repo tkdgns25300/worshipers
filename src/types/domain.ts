@@ -43,13 +43,22 @@ export interface Registration {
   deadline?: string; // ISO date — 지나면 상태 "등록마감"
 }
 
+// 정기 반복 규칙 — 날짜를 박지 않고 규칙만 저장, 읽을 때 오늘(KST) 기준으로 회차를 전개(lib/gathering-status·queries).
+export interface Recurrence {
+  weekday: number; // 0=일 … 6=토 (KST 요일)
+  until?: string; // "YYYY-MM-DD" 이 날짜까지(없으면 무기한)
+  exceptions?: string[]; // 휴회 날짜 "YYYY-MM-DD" (방학·특별주간 등)
+}
+
 export interface Gathering {
-  id: string; // 영어 kebab-case, 전역 유일 ({team-id}-{yyyy-mm-dd})
+  id: string; // 영어 kebab-case, 전역 유일. 단발={team-id}-{yyyy-mm-dd} · 정기={team-id}-{weekday}
   teamId: string;
   category: GatheringCategory;
   title?: string;
-  date: string; // "YYYY-MM-DD" (KST 기준, 다중일이면 시작일)
+  // 단발은 date(+endDate), 정기는 recurrence — 둘 중 하나.
+  date?: string; // "YYYY-MM-DD" (KST 기준, 다중일이면 시작일). 정기 반복이면 생략
   endDate?: string; // 다중일 집회의 종료일 "YYYY-MM-DD" (단일일이면 생략)
+  recurrence?: Recurrence; // 정기 반복(이 경우 date 생략)
   startTime?: string; // "HH:mm"
   endTime?: string;
   venue?: Venue; // 미정(예: SAVE THE DATE 티저)이면 생략

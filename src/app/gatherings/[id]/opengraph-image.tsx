@@ -35,9 +35,13 @@ export default async function Image({ params }: { params: Promise<{ id: string }
 
   const title = g?.title ?? (g && team ? `${team.name} ${g.category}` : "예배 모임");
   const eyebrow = g ? `${g.category}${g.isOnline ? " · 온라인" : ""}` : "";
-  const whenLine = g
-    ? [dateText(g.date) + (g.endDate ? ` – ${dateText(g.endDate)}` : ""), timeText(g.startTime)].filter(Boolean).join(" · ")
-    : "";
+  const whenLine = !g
+    ? ""
+    : g.recurrence
+      ? [`매주 ${WEEKDAYS[g.recurrence.weekday]}요일`, timeText(g.startTime)].filter(Boolean).join(" · ")
+      : [(g.date ? dateText(g.date) : "") + (g.endDate ? ` – ${dateText(g.endDate)}` : ""), timeText(g.startTime)]
+          .filter(Boolean)
+          .join(" · ");
   const metaLine = g ? [team?.name, g.venue?.name, g.venue?.region].filter(Boolean).join(" · ") : "";
 
   return new ImageResponse(

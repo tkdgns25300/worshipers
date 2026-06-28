@@ -5,13 +5,14 @@ import Link from "next/link";
 import { Search, Calendar, MapPin } from "lucide-react";
 import type { Gathering, Team } from "@/types/domain";
 import { todayKst, gatheringEndDate } from "@/lib/gathering-status";
-import { weekdayKo } from "@/lib/queries";
+import { weekdayKo, expandGatherings } from "@/lib/queries";
 import { EmptyState } from "@/components/gathering/empty-state";
 import { TeamAvatar } from "@/components/team/team-avatar";
 
 function nextLabel(g: Gathering): string {
-  const [, m, d] = g.date.split("-").map(Number);
-  return `${m}.${d} (${weekdayKo(g.date)})${g.venue?.region ? ` · ${g.venue.region}` : ""}`;
+  const date = g.date ?? "";
+  const [, m, d] = date.split("-").map(Number);
+  return `${m}.${d} (${weekdayKo(date)})${g.venue?.region ? ` · ${g.venue.region}` : ""}`;
 }
 
 export function TeamsView({ teams, gatherings }: { teams: Team[]; gatherings: Gathering[] }) {
@@ -19,7 +20,9 @@ export function TeamsView({ teams, gatherings }: { teams: Team[]; gatherings: Ga
   // 팀(주최+게스트)별 가장 가까운 다가오는 모임 — 날짜 의존이라 클라이언트 KST.
   const nextByTeam = useMemo(() => {
     const m = new Map<string, Gathering>();
-    const upcoming = gatherings.filter((g) => gatheringEndDate(g) >= today).sort((a, b) => a.date.localeCompare(b.date));
+    const upcoming = expandGatherings(gatherings, today)
+      .filter((g) => gatheringEndDate(g) >= today)
+      .sort((a, b) => (a.date ?? "").localeCompare(b.date ?? ""));
     for (const g of upcoming) {
       for (const id of [g.teamId, ...(g.guestTeamIds ?? [])]) if (!m.has(id)) m.set(id, g);
     }
@@ -33,7 +36,7 @@ export function TeamsView({ teams, gatherings }: { teams: Team[]; gatherings: Ga
   const ordered = [...filtered].sort((a, b) => {
     const na = nextByTeam.get(a.id);
     const nb = nextByTeam.get(b.id);
-    if (na && nb) return na.date.localeCompare(nb.date);
+    if (na && nb) return (na.date ?? "").localeCompare(nb.date ?? "");
     if (na) return -1;
     if (nb) return 1;
     return a.name.localeCompare(b.name, "ko");

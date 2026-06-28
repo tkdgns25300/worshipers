@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { Calendar, ChevronDown } from "lucide-react";
 import type { Gathering, Team } from "@/types/domain";
 import { todayKst, getGatheringStatus, gatheringEndDate, daysUntil } from "@/lib/gathering-status";
-import { weekdayKo } from "@/lib/queries";
+import { weekdayKo, expandGatherings } from "@/lib/queries";
 import { cn } from "@/lib/utils";
 import { GatheringRow } from "@/components/team/gathering-row";
 import { EmptyState } from "@/components/gathering/empty-state";
@@ -33,15 +33,17 @@ export function TeamGatherings({ team, gatherings, teams }: { team: Team; gather
   const [showPast, setShowPast] = useState(false);
 
   const { upcomingItems, pastDistinct } = useMemo(() => {
+    // 정기 반복은 다가오는 회차들로 전개 → 같은 제목·장소·시간이 묶여 "매주 N" 도출.
+    const list = expandGatherings(gatherings, today);
     const seriesCount = new Map<string, number>();
-    for (const g of gatherings) {
+    for (const g of list) {
       const k = seriesKey(g, team);
       seriesCount.set(k, (seriesCount.get(k) ?? 0) + 1);
     }
 
     const up: Gathering[] = [];
     const past: Gathering[] = [];
-    for (const g of gatherings) (gatheringEndDate(g) >= today ? up : past).push(g);
+    for (const g of list) (gatheringEndDate(g) >= today ? up : past).push(g);
 
     // 다가오는 것을 시리즈로 묶어 시리즈당 1줄(반복이면 다음 회차 + 주기 라벨).
     const groups = new Map<string, Gathering[]>();
@@ -50,13 +52,15 @@ export function TeamGatherings({ team, gatherings, teams }: { team: Team; gather
       (groups.get(k) ?? groups.set(k, []).get(k)!).push(g);
     }
     const items = [...groups.values()].map((series) => {
-      const sorted = [...series].sort((a, b) => a.date.localeCompare(b.date));
-      return { next: sorted[0], recurrence: sorted.length > 1 ? recurrenceLabel(sorted.map((s) => s.date)) : undefined };
+      const sorted = [...series].sort((a, b) => (a.date ?? "").localeCompare(b.date ?? ""));
+      return { next: sorted[0], recurrence: sorted.length > 1 ? recurrenceLabel(sorted.map((s) => s.date!)) : undefined };
     });
-    items.sort((a, b) => a.next.date.localeCompare(b.next.date));
+    items.sort((a, b) => (a.next.date ?? "").localeCompare(b.next.date ?? ""));
 
-    // 지난 집회: 일회성(시리즈가 한 번뿐)만, 최근 것부터.
-    const distinct = past.filter((g) => (seriesCount.get(seriesKey(g, team)) ?? 0) === 1).sort((a, b) => b.date.localeCompare(a.date));
+    // 지난 집회: 일회성(시리즈가 한 번뿐)만, 최근 것부터. (반복 회차는 미래만 전개되므로 자연히 제외됨)
+    const distinct = past
+      .filter((g) => (seriesCount.get(seriesKey(g, team)) ?? 0) === 1)
+      .sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""));
     return { upcomingItems: items, pastDistinct: distinct };
   }, [gatherings, today, team]);
 

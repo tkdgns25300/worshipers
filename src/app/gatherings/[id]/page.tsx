@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, MapPin, Navigation, ExternalLink } from "lucide-react";
+import { ChevronLeft, ChevronRight, MapPin, Navigation, ExternalLink, Info } from "lucide-react";
 import type { Team, Venue } from "@/types/domain";
 import { GATHERINGS } from "@/data/gatherings";
 import { getGathering, getTeam, getTeamGatherings } from "@/lib/queries";
 import { gatheringJsonLd, absoluteUrl } from "@/lib/seo";
+import { todayKst, resolveOccurrence } from "@/lib/gathering-status";
 import { StatusDot } from "@/components/gathering/status-dot";
 import { DdayBadge } from "@/components/gathering/dday-badge";
+import { NextOccurrence } from "@/components/gathering/next-occurrence";
 import { GatheringActions } from "@/components/gathering/gathering-actions";
 import { TeamNextCount } from "@/components/gathering/team-next-count";
 import { TeamCard } from "@/components/team/team-card";
@@ -25,7 +27,8 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   if (!g) return {};
   const team = getTeam(g.teamId);
   const title = (g.title ?? `${team?.name ?? ""} ${g.category}`).trim();
-  const description = `${g.date} · ${g.venue?.name ?? "장소 추후 공지"}${team ? ` · ${team.name}` : ""}`;
+  const whenText = g.recurrence ? `매주 ${WEEKDAYS[g.recurrence.weekday]}요일` : (g.date ?? "추후 공지");
+  const description = `${whenText} · ${g.venue?.name ?? "장소 추후 공지"}${team ? ` · ${team.name}` : ""}`;
   return { title, description, openGraph: { title, description, url: absoluteUrl(`/gatherings/${id}`) } };
 }
 
@@ -74,7 +77,13 @@ export default async function GatheringPage({ params }: { params: Promise<{ id: 
   const guestTeams = (g.guestTeamIds ?? []).map((tid) => getTeam(tid)).filter((t): t is Team => Boolean(t));
 
   const title = g.title ?? `${team.name} ${g.category}`;
-  const dateLabel = fmtDate(g.date) + (g.endDate ? ` – ${fmtDate(g.endDate)}` : "");
+  // 정기 반복은 회차별 페이지 대신 시리즈 1페이지 — 일시엔 주기, 다음 회차는 클라이언트(KST)가 표시. jsonLd는 다음 회차 날짜로.
+  const occ = g.recurrence ? resolveOccurrence(g, todayKst()) : g;
+  const dateLabel = g.recurrence
+    ? `매주 ${WEEKDAYS[g.recurrence.weekday]}요일`
+    : g.date
+      ? fmtDate(g.date) + (g.endDate ? ` – ${fmtDate(g.endDate)}` : "")
+      : "날짜 추후 공지";
   const timeLabel = g.startTime ? (g.endTime ? `${g.startTime} – ${g.endTime}` : g.startTime) : null;
   const onsite = g.registration ? !g.registration.required : false;
   const priceText = g.isFree === undefined ? "추후 공지" : g.isFree ? "무료" : `₩${(g.price ?? 0).toLocaleString("ko-KR")}`;
@@ -86,7 +95,7 @@ export default async function GatheringPage({ params }: { params: Promise<{ id: 
 
   return (
     <article>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(gatheringJsonLd(g, team)) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(gatheringJsonLd(occ, team)) }} />
 
       <div className="mx-auto max-w-2xl px-4 py-6 sm:py-8">
         <Link href="/" className="inline-flex items-center gap-1 text-sm text-ink-mute hover:text-ink">
@@ -121,6 +130,7 @@ export default async function GatheringPage({ params }: { params: Promise<{ id: 
             <TicketRow label="일시" right={<DdayBadge g={g} />}>
               {dateLabel}
               {timeLabel && <span className="text-ink-soft"> · {timeLabel}</span>}
+              {g.recurrence && <NextOccurrence g={g} />}
             </TicketRow>
             <TicketRow label="장소">
               {g.venue ? (
@@ -208,7 +218,7 @@ export default async function GatheringPage({ params }: { params: Promise<{ id: 
   );
 }
 
-// 참석 안내 — "라벨 — 내용" 줄은 라벨형 리스트로, 그 외 자유 텍스트는 한 단락으로.
+// 참석 안내 — "라벨 — 내용" 줄은 정의 리스트(라벨 강조)로, 그 외 자유 텍스트는 한 단락으로.
 function AttendanceInfo({ note }: { note: string }) {
   const lines = note
     .split("\n")
@@ -216,21 +226,24 @@ function AttendanceInfo({ note }: { note: string }) {
     .filter(Boolean);
   const structured = lines.some((l) => l.includes(" — "));
   return (
-    <section className="mt-5 rounded-2xl border border-border bg-surface p-5">
-      <h2 className="mb-3 text-xs font-bold tracking-wide text-ink-mute">참석 안내</h2>
+    <section className="mt-5 rounded-2xl border border-border bg-surface-2/60 p-4 sm:p-5">
+      <h2 className="mb-3 flex items-center gap-1.5 text-sm font-bold text-ink">
+        <Info className="size-4 text-brand-600" aria-hidden />
+        참석 안내
+      </h2>
       {structured ? (
-        <div className="space-y-2.5 text-sm">
+        <dl className="space-y-2.5 text-sm">
           {lines.map((line, i) => {
             const sep = line.indexOf(" — ");
             if (sep === -1) return <p key={i} className="leading-relaxed text-ink-soft">{line}</p>;
             return (
               <div key={i} className="flex gap-3">
-                <span className="w-14 shrink-0 font-semibold text-ink">{line.slice(0, sep)}</span>
-                <span className="flex-1 leading-relaxed text-ink-soft">{line.slice(sep + 3)}</span>
+                <dt className="w-12 shrink-0 font-bold text-brand-700">{line.slice(0, sep)}</dt>
+                <dd className="flex-1 leading-relaxed text-ink-soft">{line.slice(sep + 3)}</dd>
               </div>
             );
           })}
-        </div>
+        </dl>
       ) : (
         <p className="text-sm leading-relaxed text-ink-soft">{note}</p>
       )}

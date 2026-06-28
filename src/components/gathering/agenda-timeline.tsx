@@ -31,7 +31,7 @@ export function AgendaTimeline({ weeks, teams, today }: { weeks: AgendaWeek[]; t
                   {day.items.map((g) => {
                     const team = teamById.get(g.teamId);
                     return team ? (
-                      <AgendaCard key={g.id} g={g} team={team} status={getGatheringStatus(g, today)} today={today} />
+                      <AgendaCard key={`${g.id}-${g.date}`} g={g} team={team} status={getGatheringStatus(g, today)} today={today} />
                     ) : null;
                   })}
                 </div>

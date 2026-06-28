@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import type { Gathering, Team } from "@/types/domain";
 import { todayKst, gatheringEndDate } from "@/lib/gathering-status";
+import { expandGatherings } from "@/lib/queries";
 
 // 반복 판별 키 — team-gatherings와 동일 기준(제목·장소·시간).
 const seriesKey = (g: Gathering, team: Team) => `${g.title ?? `${team.name} ${g.category}`}|${g.venue?.name ?? ""}|${g.startTime ?? ""}`;
@@ -16,7 +17,7 @@ export function TeamNextCount({ team, current, gatherings }: { team: Team; curre
   const n = useMemo(() => {
     const currentKey = seriesKey(current, team);
     const others = new Set<string>();
-    for (const g of gatherings) {
+    for (const g of expandGatherings(gatherings, today)) {
       if (g.id === current.id || gatheringEndDate(g) < today) continue;
       const k = seriesKey(g, team);
       if (k !== currentKey) others.add(k);

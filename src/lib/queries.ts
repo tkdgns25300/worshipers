@@ -1,12 +1,22 @@
 import type { Gathering, Team } from "@/types/domain";
 import { TEAMS } from "@/data/teams";
 import { GATHERINGS } from "@/data/gatherings";
-import { daysUntil } from "@/lib/gathering-status";
+import { daysUntil, occurrenceDates } from "@/lib/gathering-status";
+import { AGENDA_HORIZON_DAYS } from "@/constants/schedule";
 
 // data/** 를 읽어 정렬·필터·join 하는 순수 함수. 외부 I/O 없음.
 // 날짜 의존 함수는 today(KST, YYYY-MM-DD)를 인자로 받는다 — 호출부에서 todayKst()로 1회 생성.
 
-const byDateAsc = (a: Gathering, b: Gathering) => a.date.localeCompare(b.date);
+const byDateAsc = (a: Gathering, b: Gathering) => (a.date ?? "").localeCompare(b.date ?? "");
+
+/** 정기 반복(recurrence)을 today 기준 다가오는 회차들로 전개. 단발은 그대로. 표시 직전에 호출한다. */
+export function expandGatherings(list: Gathering[], today: string, horizonDays = AGENDA_HORIZON_DAYS): Gathering[] {
+  return list.flatMap((g) =>
+    g.recurrence
+      ? occurrenceDates(g, today, horizonDays).map((date) => ({ ...g, date, recurrence: undefined }))
+      : [g],
+  );
+}
 const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"] as const;
 
 const pad2 = (n: number) => String(n).padStart(2, "0");
@@ -62,6 +72,7 @@ export function groupAgendaWeeks(gatherings: Gathering[], today: string): Agenda
   const todayMonday = mondayOf(today);
   const byWeek = new Map<string, Gathering[]>();
   for (const g of sorted) {
+    if (!g.date) continue; // 전개된 회차·단발만 (정기 원본은 호출 전 expandGatherings로 전개)
     const wk = mondayOf(g.date);
     (byWeek.get(wk) ?? byWeek.set(wk, []).get(wk)!).push(g);
   }
@@ -70,7 +81,8 @@ export function groupAgendaWeeks(gatherings: Gathering[], today: string): Agenda
     const label = offset === 0 ? "이번 주" : offset === 1 ? "다음 주" : offset === -1 ? "지난 주" : nthWeekLabel(wk);
     const byDate = new Map<string, Gathering[]>();
     for (const g of items) {
-      (byDate.get(g.date) ?? byDate.set(g.date, []).get(g.date)!).push(g);
+      const d = g.date!; // byWeek 단계에서 dateless 제외됨
+      (byDate.get(d) ?? byDate.set(d, []).get(d)!).push(g);
     }
     const days: AgendaDay[] = [...byDate.entries()].map(([date, its]) => ({ date, weekday: weekdayKo(date), items: its }));
     return { key: wk, label, range: weekRange(wk), days };

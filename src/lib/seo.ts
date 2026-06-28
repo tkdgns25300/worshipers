@@ -13,13 +13,14 @@ export function gatheringJsonLd(g: Gathering, team: Team) {
     : g.venue
       ? { "@type": "Place", name: g.venue.name, ...(g.venue.address ? { address: g.venue.address } : {}) }
       : null;
+  const date = g.date ?? "";
   return {
     "@context": "https://schema.org",
     "@type": "Event",
     name: g.title ?? `${team.name} ${g.category}`,
-    startDate: g.startTime ? `${g.date}T${g.startTime}:00+09:00` : g.date,
+    startDate: g.startTime ? `${date}T${g.startTime}:00+09:00` : date,
     ...(g.endDate || g.endTime
-      ? { endDate: g.endTime ? `${g.endDate ?? g.date}T${g.endTime}:00+09:00` : (g.endDate ?? g.date) }
+      ? { endDate: g.endTime ? `${g.endDate ?? date}T${g.endTime}:00+09:00` : (g.endDate ?? date) }
       : {}),
     eventAttendanceMode: onlineOnly
       ? "https://schema.org/OnlineEventAttendanceMode"

@@ -1,34 +1,32 @@
 import type { Gathering } from "@/types/domain";
+import { WEEKDAY } from "@/constants/schedule";
 
-// 예수전도단(YWAM Korea) — 매주 화요일 화요모임(신용산교회, 유튜브 생중계) + 비정기 집회.
-// ⚠️ 화요모임 날짜는 주간 패턴으로 생성됨. 방학·특별주간 휴회는 확인 후 제외할 것.
-// TODO(검수): sourceUrl이 홈페이지/인스타 루트 — 가능하면 각 집회 공지 URL로 교체.
+// 예수전도단(YWAM Korea) 본부 화요모임 — 매주 화요일 19:30, 신용산교회(서울) + 유튜브 실황 중계.
+// 출처: 공식 홈페이지 예배 안내(ywamkorea.org) + 화요모임 안내. 정기 반복이라 개별 공지 URL은 없음.
+// 날짜는 recurrence에서 오늘(KST) 기준 자동 전개. 휴회는 exceptions에 추가.
 const VENUE: Gathering["venue"] = {
   name: "신용산교회",
   address: "서울 용산구 서빙고로 17",
   region: "서울",
 };
 
-const tuesday = (date: string): Gathering => ({
-  id: `ywam-${date}`,
-  teamId: "ywam",
-  category: "정기예배",
-  title: "예수전도단 화요모임",
-  date,
-  startTime: "19:30",
-  venue: VENUE,
-  isFree: true,
-  registration: { required: false },
-  isOnline: true,
-  liveUrl: "https://www.youtube.com/@ywamworshipkorea",
-  sourceUrl: "https://www.ywamkorea.org",
-  note: "지하1층 본당. 신용산역·용산역 도보 10분. 18:50 입장.",
-});
-
 export const gatherings: Gathering[] = [
-  tuesday("2026-06-16"),
-  tuesday("2026-06-23"),
-  tuesday("2026-06-30"),
+  {
+    id: "ywam-tuesday",
+    teamId: "ywam",
+    category: "정기예배",
+    title: "예수전도단 화요모임",
+    // 08-04(화)은 2026 Mission Conference(8/3~8/5) 주간이라 화요모임 휴회 → MC로 대체.
+    recurrence: { weekday: WEEKDAY.화, exceptions: ["2026-08-04"] },
+    startTime: "19:30",
+    venue: VENUE,
+    isFree: true,
+    registration: { required: false },
+    isOnline: true,
+    liveUrl: "https://www.youtube.com/@ywamworshipkorea", // 채널 URL(개별 라이브 링크 아님).
+    sourceUrl: "https://www.ywamkorea.org/worship.php",
+    note: "교통 — 1호선 신용산역·용산역에서 도보 10분\n입장 — 오후 6시 50분부터 예배당(신용산교회 지하1층 본당) 입장\n문의 — 예수전도단 본부 02-3142-0907",
+  },
   {
     id: "ywam-2026-08-03",
     teamId: "ywam",
@@ -40,7 +38,10 @@ export const gatherings: Gathering[] = [
     endTime: "21:30",
     venue: VENUE,
     isFree: true,
-    registration: { required: true, url: "https://forms.gle/T1qmpD7qeXbwNX3D7" }, // 2026 MC 등록 폼
+    registration: {
+      required: true,
+      url: "https://docs.google.com/forms/d/e/1FAIpQLSdaUPZti2VcZ85L5izC6pXyB0jEtKIcGDUI5cYLCdK7ENkLZg/viewform",
+    }, // 2026 MC 등록 폼 (공식 공지 최신)
     guestTeamIds: ["i6tyone"],
     guests: ["Garth Gustafson (YWAM UofN)"],
     sourceUrl: "https://www.instagram.com/ywamcmk",
